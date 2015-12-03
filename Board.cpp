@@ -18,6 +18,7 @@ Board::~Board()
 	// TODO Auto-generated destructor stub
 }
 
+
 void Board::init(void)
 {
 
@@ -36,3 +37,4 @@ void Board::drawFrame(void)
 		cout<<"\r*\t\t\t\t\t\t\t*"<<endl;
 	cout<<"\r*********************************************************"<<endl;
 }
+

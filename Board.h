@@ -19,7 +19,6 @@ public:
 	void clear();
 	void drawFrame(void);
 
-
 	Board();
 	virtual ~Board();
 };

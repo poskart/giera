@@ -8,8 +8,20 @@
 
 #include <iostream>
 #include <ncurses.h>
+
 #include "Board.h"
 using namespace std;
+
+using namespace std;
+
+void drawFrame(void)
+{
+	move(0,0);
+	cout<<"\r*********************************************************"<<endl;
+	for(int i = 0 ; i < 20 ; i++)
+		cout<<"\r*\t\t\t\t\t\t\t*"<<endl;
+	cout<<"\r*********************************************************"<<endl;
+}
 
 int main()
 {
