@@ -47,6 +47,10 @@ int main()
 		plansza.drawFrame();
 	}
 
+	char ch;
+	cout<<"Tutaj znaki: "<<endl;
+	for(int i = 0 ; i < 255; i++)
+		cout<<ch++<<" ";
 	endwin();
 	return 0;
 }
