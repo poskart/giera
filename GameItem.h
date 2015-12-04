@@ -40,20 +40,19 @@ public:
 	GameItem();
 	virtual ~GameItem();
 
-	virtual bool move(int dx, int dy) = 0;
+	virtual bool move(const int & dx, const int & dy) = 0;
 	virtual bool setPosition(position coords) = 0;
+	position getPosition(void);
 	void setLife(int & percent);
 	bool isAlive(void);
 
 
 protected:
 	position coordinates;
-	/**
-	 * array that describes size of the gameItem in each of direction
-	 * form the middle of Item (forward, right, back, left)
-	 */
-	static short int sizes[4];
+
 	int lifePercentage;
+
+	void forcePosition(position & nowa);
 };
 
 #endif /* GAMEITEM_H_ */

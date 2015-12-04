@@ -9,7 +9,6 @@
 
 GameItem::GameItem()
 {
-	// TODO Auto-generated constructor stub
 
 }
 
@@ -26,4 +25,14 @@ void GameItem::setLife(int & percent)
 bool GameItem::isAlive(void)
 {
 	return lifePercentage != 0;
+}
+
+position GameItem::getPosition(void)
+{
+	return coordinates;
+}
+
+void GameItem::forcePosition(position & nowa)
+{
+	coordinates = nowa;
 }
