@@ -8,6 +8,8 @@
 #ifndef GAMEITEM_H_
 #define GAMEITEM_H_
 
+#include <ncurses.h>
+
 #include <vector>
 #include <iostream>
 
@@ -50,6 +52,7 @@ public:
 	position getPosition(void);
 	void setLife(int & percent);
 	bool isAlive(void);
+	virtual void draw(ostream & where) const = 0;
 
 
 protected:
@@ -58,6 +61,15 @@ protected:
 
 	void forcePosition(position & nowa);
 };
+
+/**
+ * virtual operator << use functions GameItem::draw()
+ * @param os - ostream (cout)
+ * @param gi - instance of class derived from GameItem
+ * @return os - ostream (cout)
+ */
+
+ostream & operator<< (ostream & os, const GameItem & gi);
 
 bool isXinsideBoard(int x);
 bool isYinsideBoard(int y);

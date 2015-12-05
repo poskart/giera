@@ -38,3 +38,21 @@ void Board::drawFrame(void)
 	cout<<"\r*********************************************************"<<endl;
 }
 
+void Board::initialize(void)
+{
+	EnemyShip * nowy = new EnemyShip(30, 15);
+	enemies.push_back(nowy);
+
+	EnemyShip * nowy1 = new EnemyShip(60, 15);
+	enemies.push_back(nowy1);
+
+	Stone * kamien = new Stone(45, 22);
+	enemies.push_back(kamien);
+}
+
+void Board::drawItems(void)
+{
+	vector<GameItem *>::iterator i = enemies.begin();
+	for(	; i != enemies.end(); i++)
+		cout<<*i;
+}

@@ -81,4 +81,15 @@ bool Stone::whetherCollideWithWallsY(Stone & jakis)
 	return true;
 }
 
+void Stone::draw(ostream & where) const
+{
+	::move(coordinates.x, coordinates.y);
+	printw("^");
+	for(int i = 0 ; i < numberOfBodyPoints ; i++)
+	{
+		::move(coordinates.x + pointsOfBody[i].x, coordinates.y + pointsOfBody[i].y);
+		printw("^");
+	}
+}
+
 

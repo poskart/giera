@@ -9,7 +9,7 @@
 #define ENEMYITEM_H_
 #include "GameItem.h"
 
-class EnemyItem : public GameItem
+class EnemyItem : virtual public GameItem
 {
 public:
 	EnemyItem();

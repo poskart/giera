@@ -9,8 +9,6 @@
 #define STONE_H_
 #include "EnemyItem.h"
 
-const short int numberOfBodyPoints = 3;
-
 class Stone : public EnemyItem
 {
 public:
@@ -22,7 +20,7 @@ public:
 
 	bool move(const int & dx, const int & dy);
 	bool setPosition(position & coords);
-
+	void draw(ostream & where) const;
 
 protected:
 	bool whetherCollideWithPosition(const position & potentialCollide);
@@ -31,6 +29,7 @@ protected:
 	bool whetherCollideWithWallsY(Stone & jakis);
 
 private:
+	const static short int numberOfBodyPoints = 3;
 	/**
 	 * array that describes size of the gameItem in each of direction
 	 * form the middle of Item (forward, right, back, left)

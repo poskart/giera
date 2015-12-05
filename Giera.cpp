@@ -30,12 +30,16 @@ int main()
 	printw("Siema! Witam w mojej apce..");
 	move(20,25);
 	printw("Costam");
-//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
+	move(2,2);
+	//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
 
 	Board plansza;
+	move(0,0);
+	plansza.initialize();
+	plansza.drawFrame();
+	plansza.drawItems();
 
-
-	refresh();
+	//refresh();
 	int c;
 	while((c = getch()) != 27)
 	{

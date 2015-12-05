@@ -13,6 +13,8 @@
 #include "NeutralItem.h"
 #include "Spaceship.h"
 #include "Stone.h"
+#include "EnemyShip.h"
+
 using namespace std;
 
 class Board
@@ -21,12 +23,14 @@ public:
 	void init();
 	void clear();
 	void drawFrame(void);
+	void drawItems(void);
+	void initialize(void);
 
 	Board();
 	virtual ~Board();
 private:
-	vector<GameItem> enemies;
-	vector<GameItem> neutrals;
+	vector<GameItem *> enemies;
+	vector<GameItem *> neutrals;
 
 	int MySpaceShip;
 };

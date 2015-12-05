@@ -9,7 +9,7 @@
 #define NEUTRALITEM_H_
 #include "GameItem.h"
 
-class NeutralItem : public GameItem
+class NeutralItem : virtual public GameItem
 {
 public:
 	NeutralItem();

@@ -13,12 +13,6 @@ class Spaceship : public virtual GameItem
 {
 public:
 
-	/**
-	 * array that describes size of the gameItem in each of direction
-	 * form the middle of Item (forward, right, back, left)
-	 */
-	static short int sizes[4];
-
 	Spaceship();
 	virtual ~Spaceship();
 };

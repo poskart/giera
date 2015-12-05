@@ -37,6 +37,11 @@ void GameItem::forcePosition(position & nowa)
 	coordinates = nowa;
 }
 
+ostream & operator<< (ostream & os, const GameItem & gi)
+{
+	gi.draw(os);
+	return os;
+}
 
 bool isXinsideBoard(int x)
 {
