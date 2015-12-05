@@ -7,8 +7,9 @@
 
 #ifndef SPACESHIP_H_
 #define SPACESHIP_H_
+#include "GameItem.h"
 
-class Spaceship
+class Spaceship : public virtual GameItem
 {
 public:
 

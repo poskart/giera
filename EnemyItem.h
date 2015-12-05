@@ -15,8 +15,8 @@ public:
 	EnemyItem();
 	virtual ~EnemyItem();
 
-	virtual bool move(int dx, int dy) = 0;
-	virtual bool setPosition(position coords) = 0;
+	virtual bool move(const int & dx, const int & dy) = 0;
+	virtual bool setPosition(position & coords) = 0;
 };
 
 #endif /* ENEMYITEM_H_ */

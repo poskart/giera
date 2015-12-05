@@ -8,6 +8,11 @@
 #ifndef GAMEITEM_H_
 #define GAMEITEM_H_
 
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
 //
 //	static const int boardSizeX;
 //	static const int boardSizeY;
@@ -41,7 +46,7 @@ public:
 	virtual ~GameItem();
 
 	virtual bool move(const int & dx, const int & dy) = 0;
-	virtual bool setPosition(position coords) = 0;
+	virtual bool setPosition(position & coords) = 0;
 	position getPosition(void);
 	void setLife(int & percent);
 	bool isAlive(void);
@@ -49,10 +54,16 @@ public:
 
 protected:
 	position coordinates;
-
 	int lifePercentage;
 
 	void forcePosition(position & nowa);
 };
+
+bool isXinsideBoard(int x);
+bool isYinsideBoard(int y);
+int maxXofPoints(position * array, const int & N);
+int maxYofPoints(position * array, const int & N);
+int minXofPoints(position * array, const int & N);
+int minYofPoints(position * array, const int & N);
 
 #endif /* GAMEITEM_H_ */

@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include <ncurses.h>
+#include "NeutralItem.h"
+#include "Spaceship.h"
+#include "Stone.h"
 using namespace std;
 
 class Board
@@ -21,6 +24,11 @@ public:
 
 	Board();
 	virtual ~Board();
+private:
+	vector<GameItem> enemies;
+	vector<GameItem> neutrals;
+
+	int MySpaceShip;
 };
 
 #endif /* BOARD_H_ */

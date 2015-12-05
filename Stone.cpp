@@ -7,38 +7,78 @@
 
 #include "Stone.h"
 
-short int Stone::sizes[4] = {1,2,3,4};
+position Stone::pointsOfBody[numberOfBodyPoints] = {{0, -1}, {1, 0}, {-1, 0}};
 
-Stone::Stone()
+Stone::Stone() : Stone::Stone({boardSizeX/2, minYofPoints(pointsOfBody, numberOfBodyPoints)})	{}
+
+Stone::Stone(position & newPos)
 {
-	// TODO Auto-generated constructor stub
-
+	coordinates = newPos;
 }
 
-Stone::~Stone()
+Stone::Stone(const int & xx, const int & yy)
 {
-	// TODO Auto-generated destructor stub
+	coordinates.x = xx;
+	coordinates.y = yy;
 }
+
+Stone::~Stone(){}
 
 bool Stone::move(const int & dx, const int & dy)
 {
-	if(dx > 0)
+	bool wasMoved = false;
+	Stone *obstacle = new Stone(this->coordinates.x + dx, this->coordinates.y + dy);
+	if(!obstacle->whetherCollideWithWallsX(*obstacle))
 	{
-		if(	(coordinates.x + sizes[right] + dx)	 < boardSizeX)
-		{
-			return true;
-		}
-
-
+		coordinates.x += dx;
+		wasMoved = true;
 	}
+	if(!obstacle->whetherCollideWithWallsY(*obstacle))
+	{
+		coordinates.y += dy;
+		wasMoved = true;
+	}
+	delete obstacle;
+
+	return wasMoved;
 }
 
-bool Stone::whetherCollideWithPosition(const position & potantialCollide)
+bool Stone::setPosition(position & coords)
 {
-	if(potantialCollide.x < (coordinates.x + sizes[right])
-			&& potantialCollide.x > (coordinates.x - sizes[left])
-			&& potantialCollide.y > (coordinates.y - sizes[back])
-			&& potantialCollide.y < (coordinates.y - sizes[forward])
-			)
+	coordinates = coords;
 	return true;
 }
+
+
+bool Stone::whetherCollideWithPosition(const position & potentialCollide)
+{
+	for(int i = 0 ; i < numberOfBodyPoints ; i++)
+		if(	(potentialCollide.x == pointsOfBody[i].x)	&& (potentialCollide.y == pointsOfBody[i].y)	)
+			return true;
+	return false;
+}
+
+bool Stone::whetherCollideWithWalls(Stone & jakis)
+{
+	if(	whetherCollideWithWallsX(jakis) && whetherCollideWithWallsY(jakis)	)
+		return true;
+	return false;
+}
+
+bool Stone::whetherCollideWithWallsX(Stone & jakis)
+{
+	if(isXinsideBoard(jakis.coordinates.x + maxXofPoints(pointsOfBody, numberOfBodyPoints))
+			&& isXinsideBoard(jakis.coordinates.x + minXofPoints(pointsOfBody, numberOfBodyPoints)) )
+		return false;
+	return true;
+}
+
+bool Stone::whetherCollideWithWallsY(Stone & jakis)
+{
+	if(isYinsideBoard(jakis.coordinates.y + maxYofPoints(pointsOfBody, numberOfBodyPoints))
+			&& isYinsideBoard(jakis.coordinates.y + minYofPoints(pointsOfBody, numberOfBodyPoints)) )
+		return false;
+	return true;
+}
+
+
