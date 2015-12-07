@@ -8,7 +8,7 @@
 #ifndef GAMEITEM_H_
 #define GAMEITEM_H_
 
-#include <ncurses.h>
+#include <curses.h>
 
 #include <vector>
 #include <iostream>
@@ -19,8 +19,8 @@ using namespace std;
 //	static const int boardSizeX;
 //	static const int boardSizeY;
 
-const int boardSizeX = 80;
-const int boardSizeY = 25;
+const int boardSizeX = 120;
+const int boardSizeY = 50;
 
 typedef struct
 {

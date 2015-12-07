@@ -7,54 +7,48 @@
 //============================================================================
 
 #include <iostream>
-#include <ncurses.h>
+#include <curses.h>
 
 #include "Board.h"
 using namespace std;
 
 using namespace std;
 
-void drawFrame(void)
-{
-	move(0,0);
-	cout<<"\r*********************************************************"<<endl;
-	for(int i = 0 ; i < 20 ; i++)
-		cout<<"\r*\t\t\t\t\t\t\t*"<<endl;
-	cout<<"\r*********************************************************"<<endl;
-}
-
 int main()
 {
 	initscr();
 	noecho();
-	printw("Siema! Witam w mojej apce..");
-	move(20,25);
-	printw("Costam");
-	move(2,2);
 	//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
 
 	Board plansza;
+	plansza.init();
 	move(0,0);
 	plansza.initialize();
 	plansza.drawFrame();
+	refresh();
 	plansza.drawItems();
+	refresh();
 
-	//refresh();
 	int c;
 	while((c = getch()) != 27)
 	{
+		clear();
+		plansza.drawFrame();
+		plansza.drawItems();
+
 		move(10,10);
 		printw("Keycode: %d, you pressed %c key..", c, c);
-		move(0,0);
-		printw("Write something (ESC to escape): ");
-		refresh();
-		plansza.drawFrame();
 	}
 
-	char ch;
+	
+	/*char ch = 0;
 	cout<<"Tutaj znaki: "<<endl;
-	for(int i = 0 ; i < 255; i++)
-		cout<<ch++<<" ";
+	for (int i = 0; i < 56; i++)
+	{
+		cout << ch++ << " " << i << endl;
+	}*/
+	refresh();
 	endwin();
+
 	return 0;
 }

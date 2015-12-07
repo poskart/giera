@@ -7,7 +7,7 @@
 
 #include "EnemyShip.h"
 
-position EnemyShip::pointsOfBody[numberOfBodyPoints] = {{0, -1}, {1, 0}, {-1, 0}};
+position EnemyShip::pointsOfBody[numberOfBodyPoints] = {{0, 1}, {1, 0}, {-1, 0}};
 
 EnemyShip::EnemyShip() : EnemyShip::EnemyShip({boardSizeX/2, minYofPoints(pointsOfBody, numberOfBodyPoints)})	{}
 
@@ -83,11 +83,11 @@ bool EnemyShip::whetherCollideWithWallsY(EnemyShip & jakis)
 
 void EnemyShip::draw(ostream & where) const
 {
-	::move(coordinates.x, coordinates.y);
-	printw("^");
+	::move(coordinates.y, coordinates.x);
+	printw("v");
 	for(int i = 0 ; i < numberOfBodyPoints ; i++)
 	{
-		::move(coordinates.x + pointsOfBody[i].x, coordinates.y + pointsOfBody[i].y);
-		printw("^");
+		::move(coordinates.y + pointsOfBody[i].y, coordinates.x + pointsOfBody[i].x);
+		printw("v");
 	}
 }

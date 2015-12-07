@@ -29,7 +29,7 @@ protected:
 	bool whetherCollideWithWallsY(Stone & jakis);
 
 private:
-	const static short int numberOfBodyPoints = 3;
+	const static short int numberOfBodyPoints = 5;
 	/**
 	 * array that describes size of the gameItem in each of direction
 	 * form the middle of Item (forward, right, back, left)

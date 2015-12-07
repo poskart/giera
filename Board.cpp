@@ -7,6 +7,8 @@
 
 #include "Board.h"
 
+char Board::frameHorizontalLine[] = { 0 };
+
 Board::Board()
 {
 	// TODO Auto-generated constructor stub
@@ -18,10 +20,11 @@ Board::~Board()
 	// TODO Auto-generated destructor stub
 }
 
-
 void Board::init(void)
 {
-
+	for (int i = 0; i < boardSizeX; i++)
+		frameHorizontalLine[i] = frameCharacter;
+	frameHorizontalLine[boardSizeX] = '\0';
 }
 
 void Board::clear(void)
@@ -31,11 +34,20 @@ void Board::clear(void)
 
 void Board::drawFrame(void)
 {
-	move(0,0);
-	cout<<"\r*********************************************************"<<endl;
-	for(int i = 0 ; i < 20 ; i++)
-		cout<<"\r*\t\t\t\t\t\t\t*"<<endl;
-	cout<<"\r*********************************************************"<<endl;
+	::move(0,0);
+	printw("\r%s\n", frameHorizontalLine);
+
+	int i;
+	for (i = 1; i < boardSizeY; i++)
+	{
+		::move(i, 0);
+		printw("\r%c", frameCharacter);
+		::move(i, boardSizeX-1);
+		printw("%c", frameCharacter);
+	}
+	move(i, 0);
+	printw("\r%s\n", frameHorizontalLine);
+	refresh();
 }
 
 void Board::initialize(void)
@@ -53,6 +65,8 @@ void Board::initialize(void)
 void Board::drawItems(void)
 {
 	vector<GameItem *>::iterator i = enemies.begin();
-	for(	; i != enemies.end(); i++)
-		cout<<*i;
+	for (; i != enemies.end(); i++)
+	{
+		cout << (*(*i));
+	}
 }

@@ -9,13 +9,15 @@
 #define BOARD_H_
 
 #include <iostream>
-#include <ncurses.h>
+#include <curses.h>
 #include "NeutralItem.h"
 #include "Spaceship.h"
 #include "Stone.h"
 #include "EnemyShip.h"
 
 using namespace std;
+
+const char frameCharacter = '#';
 
 class Board
 {
@@ -32,6 +34,7 @@ private:
 	vector<GameItem *> enemies;
 	vector<GameItem *> neutrals;
 
+	static char frameHorizontalLine[boardSizeX + 1];
 	int MySpaceShip;
 };
 
