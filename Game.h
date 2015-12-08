@@ -8,10 +8,19 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include "Board.h"
+#include "Stone.h"
+
 class Game
 {
+public:
 	Game();
-	~Game();
+	virtual ~Game();
+
+	void saveGame();
+	void playGame();
+	void loadGame();
+	
 private:
 	Board plansza;
 };

@@ -9,44 +9,24 @@
 #include <iostream>
 #include <curses.h>
 
-#include "Board.h"
-using namespace std;
+#include "Game.h"
+#include "Menu.h"
 
 using namespace std;
 
 int main()
 {
+	WINDOW *menu_win;
 	initscr();
 	noecho();
 	//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
+	Game gra;
 
-	Board plansza;
-	plansza.init();
-	move(0,0);
-	plansza.initialize();
-	plansza.drawFrame();
-	refresh();
-	plansza.drawItems();
-	refresh();
+	Menu menu(gra);
+	menu.start();
+	gra.playGame();
 
-	int c;
-	while((c = getch()) != 27)
-	{
-		clear();
-		plansza.drawFrame();
-		plansza.drawItems();
 
-		move(10,10);
-		printw("Keycode: %d, you pressed %c key..", c, c);
-	}
-
-	
-	/*char ch = 0;
-	cout<<"Tutaj znaki: "<<endl;
-	for (int i = 0; i < 56; i++)
-	{
-		cout << ch++ << " " << i << endl;
-	}*/
 	refresh();
 	endwin();
 
