@@ -50,6 +50,75 @@ ostream & operator<< (ostream & os, const GameItem & gi)
 	return os;
 }
 
+bool GameItem::move(const int & dx, const int & dy)
+{
+	bool wasMoved = false;
+	GameItem *obstacle = clone();
+	position aux{ this->coordinates.x + dx, this->coordinates.y + dy };
+	obstacle->forcePosition(aux);
+	if (!obstacle->whetherCollideWithWallsX(*obstacle))
+	{
+		coordinates.x += dx;
+		wasMoved = true;
+	}
+	if (!obstacle->whetherCollideWithWallsY(*obstacle))
+	{
+		coordinates.y += dy;
+		wasMoved = true;
+	}
+	delete obstacle;
+
+	return wasMoved;
+}
+
+bool GameItem::setPosition(position & coords)
+{
+	coordinates = coords;
+	return true;
+}
+
+
+bool GameItem::whetherCollideWithPosition(const position & potentialCollide)
+{
+	for (int i = 0; i < getNumberOfBodyPoints(); i++)
+		if ((potentialCollide.x == getPointsOfBody()[i].x) && (potentialCollide.y == getPointsOfBody()[i].y))
+			return true;
+	return false;
+}
+
+bool GameItem::whetherCollideWithWalls(GameItem & jakis)
+{
+	if (whetherCollideWithWallsX(jakis) && whetherCollideWithWallsY(jakis))
+		return true;
+	return false;
+}
+
+bool GameItem::whetherCollideWithWallsX(GameItem & jakis)
+{
+	if (isXinsideBoard(jakis.coordinates.x + maxXofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
+		&& isXinsideBoard(jakis.coordinates.x + minXofPoints(getPointsOfBody(), getNumberOfBodyPoints())))
+		return false;
+	return true;
+}
+
+bool GameItem::whetherCollideWithWallsY(GameItem & jakis)
+{
+	if (isYinsideBoard(jakis.coordinates.y + maxYofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
+		&& isYinsideBoard(jakis.coordinates.y + minYofPoints(getPointsOfBody(), getNumberOfBodyPoints())))
+		return false;
+	return true;
+}
+
+void GameItem::draw(ostream & where) const  
+{
+	mvwprintw(win, coordinates.y, coordinates.x, "%c", this->getMainCharacter());
+	for (int i = 0; i < this->getNumberOfBodyPoints(); i++)
+	{
+		mvwprintw(win, coordinates.y + this->getPointsOfBody()[i].y, coordinates.x + this->getPointsOfBody()[i].x,
+			"%c", this->getMainCharacter());
+	}
+}
+
 bool isXinsideBoard(int x)
 {
 	if( x < gameBoardSizeX && x > 0)

@@ -19,17 +19,12 @@ public:
 	MyShip(const int & xx, const int & yy);
 	virtual ~MyShip();
 
-	bool move(const int & dx, const int & dy);
-	bool setPosition(position & coords);
-	void draw(ostream & where) const;
-	position * getPointsOfBody(void);
-	int getNumberOfBodyPoints(void);
+	position * getPointsOfBody(void) const;
+	int getNumberOfBodyPoints(void) const;
+	char getMainCharacter(void) const;
+	GameItem * clone() { return new MyShip(*this); };
 
 protected:
-	bool whetherCollideWithPosition(const position & potentialCollide);
-	bool whetherCollideWithWalls(MyShip & jakis);
-	bool whetherCollideWithWallsX(MyShip & jakis);
-	bool whetherCollideWithWallsY(MyShip & jakis);
 
 private:
 	const static short int numberOfBodyPoints = 3;

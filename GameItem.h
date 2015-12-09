@@ -46,14 +46,21 @@ public:
 
 	static void setCommonWindow(WINDOW * fromGame);
 
-	bool move(const int & dx, const int & dy);
-	virtual bool setPosition(position & coords) = 0;
 	position getPosition(void);
 	void setLife(int & percent);
 	bool isAlive(void);
-	virtual void draw(ostream & where) const = 0;
-	virtual position * getPointsOfBody(void) = 0;
-	virtual int getNumberOfBodyPoints(void) = 0;
+	virtual GameItem * clone() = 0 ;
+	virtual position * getPointsOfBody(void) const = 0;
+	virtual int getNumberOfBodyPoints(void) const = 0;
+	virtual char getMainCharacter(void) const  = 0;
+
+	bool move(const int & dx, const int & dy);
+	bool setPosition(position & coords);
+	bool whetherCollideWithPosition(const position & potentialCollide);
+	bool whetherCollideWithWalls(GameItem & jakis);
+	bool whetherCollideWithWallsX(GameItem & jakis);
+	bool whetherCollideWithWallsY(GameItem & jakis);
+	void draw(ostream & where) const ;
 
 
 protected:

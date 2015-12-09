@@ -14,9 +14,6 @@ class NeutralItem : virtual public GameItem
 public:
 	NeutralItem();
 	virtual ~NeutralItem();
-
-	virtual bool move(const int & dx, const int & dy) = 0;
-	virtual bool setPosition(position & coords) = 0;
 };
 
 #endif /* NEUTRALITEM_H_ */

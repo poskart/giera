@@ -18,17 +18,13 @@ public:
 	Stone(const int & xx, const int & yy);
 	virtual ~Stone();
 
-	bool move(const int & dx, const int & dy);
-	bool setPosition(position & coords);
-	void draw(ostream & where) const;
-	position * getPointsOfBody(void);
-	int getNumberOfBodyPoints(void);
+	position * getPointsOfBody(void) const;
+	int getNumberOfBodyPoints(void) const;
+	char getMainCharacter(void) const;
+	GameItem * clone() { return new Stone(*this); };
+
 
 protected:
-	bool whetherCollideWithPosition(const position & potentialCollide);
-	bool whetherCollideWithWalls(Stone & jakis);
-	bool whetherCollideWithWallsX(Stone & jakis);
-	bool whetherCollideWithWallsY(Stone & jakis);
 
 private:
 	const static short int numberOfBodyPoints = 5;
