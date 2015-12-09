@@ -11,6 +11,8 @@
 #include "Board.h"
 #include "Stone.h"
 
+using namespace chrono;
+
 class Game
 {
 public:
@@ -24,6 +26,7 @@ public:
 private:
 	WINDOW * gameWindow;
 	Board plansza;
+	milliseconds timeCounter, beginTime;
 };
 
 #endif /* GAME_H_ */

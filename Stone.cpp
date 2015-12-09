@@ -85,12 +85,11 @@ bool Stone::whetherCollideWithWallsY(Stone & jakis)
 
 void Stone::draw(ostream & where) const
 {
-	::move(coordinates.y, coordinates.x);
-	printw("%c", mainCharacter);
+	mvwprintw(win, coordinates.y, coordinates.x, "%c", mainCharacter);
 	for(int i = 0 ; i < numberOfBodyPoints ; i++)
 	{
-		::move(coordinates.y + pointsOfBody[i].y, coordinates.x + pointsOfBody[i].x);
-		printw("%c",mainCharacter);
+		mvwprintw(win, coordinates.y + pointsOfBody[i].y, coordinates.x + pointsOfBody[i].x,
+			"%c",mainCharacter);
 	}
 }
 

@@ -15,15 +15,16 @@
 #include <cstdlib>
 #include <time.h>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
 
-//
-//	static const int boardSizeX;
-//	static const int boardSizeY;
-
 const int boardSizeX = 120;
 const int boardSizeY = 50;
+
+//The same as above + frame thickness
+const int gameBoardSizeX = boardSizeX + 2;
+const int gameBoardSizeY = boardSizeY + 2;
 
 typedef struct
 {
@@ -34,23 +35,18 @@ typedef struct
  * enum for array which describes size of Item in each direction
  * from the middle (forward, right, back, left)
  */
-enum
-{
-	forward,
-	right,
-	back,
-	left
-};
 
 class GameItem
 {
 public:
-
+	
 
 	GameItem();
 	virtual ~GameItem();
 
-	virtual bool move(const int & dx, const int & dy) = 0;
+	static void setCommonWindow(WINDOW * fromGame);
+
+	bool move(const int & dx, const int & dy);
 	virtual bool setPosition(position & coords) = 0;
 	position getPosition(void);
 	void setLife(int & percent);
@@ -63,6 +59,8 @@ public:
 protected:
 	position coordinates;
 	int lifePercentage;
+	static WINDOW * win;
+	static int * cod;
 
 	void forcePosition(position & nowa);
 };

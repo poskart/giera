@@ -7,6 +7,8 @@
 
 #include "GameItem.h"
 
+WINDOW * GameItem::win = NULL;
+
 GameItem::GameItem()
 {
 	lifePercentage = 100;
@@ -15,6 +17,11 @@ GameItem::GameItem()
 GameItem::~GameItem()
 {
 	// TODO Auto-generated destructor stub
+}
+
+void GameItem::setCommonWindow(WINDOW * fromGame)
+{
+	GameItem::win = fromGame;
 }
 
 void GameItem::setLife(int & percent)
@@ -45,14 +52,14 @@ ostream & operator<< (ostream & os, const GameItem & gi)
 
 bool isXinsideBoard(int x)
 {
-	if( x < boardSizeX && x > 0)
+	if( x < gameBoardSizeX && x > 0)
 		return true;
 	return false;
 }
 
 bool isYinsideBoard(int y)
 {
-	if( y < boardSizeY && y > 0)
+	if( y < gameBoardSizeY && y > 0)
 		return true;
 	return false;
 }

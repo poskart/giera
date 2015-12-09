@@ -2,8 +2,13 @@
 
 Game::Game()
 {
-	gameWindow = newwin(boardSizeY, boardSizeX, 0, 0);
+	gameWindow = newwin(gameBoardSizeY, gameBoardSizeX, 0, 0);
+	noecho();
+	cbreak();
 	keypad(gameWindow, TRUE);
+	beginTime = duration_cast< milliseconds >(
+		system_clock::now().time_since_epoch()
+		);
 }
 
 Game::~Game()
@@ -13,32 +18,37 @@ Game::~Game()
 
 void Game::playGame(void)
 {
-	plansza.init();
-	move(0, 0);
+	plansza.init(gameWindow);
 	plansza.initialize();
 	plansza.drawFrame();
 	plansza.drawItems();
-	refresh();
+	wtimeout(gameWindow, 100);
 
 	int c = 0;
-	char kk;
-	while ((kk = cin.get()) != 'p')//((c = getch()) != 27)
+	fflush(stdin);
+	while (1)
 	{
-		cin.putback(kk);
+		timeCounter = duration_cast< milliseconds >(
+			system_clock::now().time_since_epoch()
+			) - beginTime;
+		
 		c = wgetch(gameWindow);
+		fflush(stdin);
+		
+		plansza.update(timeCounter, c);
 		if (c != 0) {
-			printw("Tutaj jest c: %c", c);
-			//break;
+			mvwprintw(gameWindow, 12, 12, "Czas : %d", timeCounter / (1000));
+			mvwprintw(gameWindow, 13, 12, "Tutaj jest c: %c", c);
 		}
-		//clear();
+
+		if (c == 27)
+			break;
+		wclear(gameWindow);
 		plansza.drawFrame();
 		plansza.drawItems();
 
-		move(10, 10);
-		printw("Keycode: %d, you pressed %c key..", (int)kk, kk);
+		mvwprintw(gameWindow, 10, 10, "Keycode: %d, you pressed %c key..", (int)c, c);
 	}
-	mvprintw(18, 18, "Klawisz %d", (int)kk);
-	getch();
 }
 
 void Game::saveGame()

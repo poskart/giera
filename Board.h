@@ -14,6 +14,7 @@
 #include "Spaceship.h"
 #include "Stone.h"
 #include "EnemyShip.h"
+#include "MyShip.h"
 
 using namespace std;
 
@@ -22,23 +23,26 @@ const char frameCharacter = '#';
 class Board
 {
 public:
-	void init();
+	void init(WINDOW * fromGame);
 	void clear();
 	void drawFrame(void);
 	void drawItems(void);
 	void initialize(void);
 	void randomEnemy(double difficultyLevel);
+	void Board::update(chrono::milliseconds & time, const int & key);
 
 	Board();
+	Board(WINDOW * fromGame);
 	virtual ~Board();
 private:
+	WINDOW * win;
 	vector<GameItem *> enemies;
 	vector<GameItem *> neutrals;
+	GameItem * myShip;
 
-	static char frameHorizontalLine[boardSizeX + 1];
-	int MySpaceShip;
+	static char frameHorizontalLine[gameBoardSizeX + 1];
 
-	double & probabilityDistributeFunction(double & x, double & difficulty);
+	//double & probabilityDistributeFunction(double & x, double & difficulty);
 };
 
 #endif /* BOARD_H_ */

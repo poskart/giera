@@ -39,6 +39,7 @@ private:
 	 * form the middle of Item (forward, right, back, left)
 	 */
 	static position pointsOfBody[numberOfBodyPoints];
+	static char mainCharacter;
 };
 
 #endif /* ENEMYSHIP_H_ */
