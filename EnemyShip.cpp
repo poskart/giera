@@ -91,3 +91,12 @@ void EnemyShip::draw(ostream & where) const
 		printw("v");
 	}
 }
+
+position * EnemyShip::getPointsOfBody(void)
+{
+	return pointsOfBody;
+}
+int EnemyShip::getNumberOfBodyPoints(void)
+{
+	return numberOfBodyPoints;
+}

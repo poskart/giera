@@ -27,6 +27,7 @@ public:
 	void drawFrame(void);
 	void drawItems(void);
 	void initialize(void);
+	void randomEnemy(double difficultyLevel);
 
 	Board();
 	virtual ~Board();
@@ -36,6 +37,8 @@ private:
 
 	static char frameHorizontalLine[boardSizeX + 1];
 	int MySpaceShip;
+
+	double & probabilityDistributeFunction(double & x, double & difficulty);
 };
 
 #endif /* BOARD_H_ */

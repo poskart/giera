@@ -11,7 +11,7 @@
 #include "Game.h"
 
 const int WIDTH = 30;
-const int HEIGHT = 24;
+const int HEIGHT = 10;
 
 class Menu
 {

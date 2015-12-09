@@ -7,6 +7,8 @@
 
 #include "Stone.h"
 
+char Stone::mainCharacter = '@';
+
 position Stone::pointsOfBody[numberOfBodyPoints] = { {0, -1}, {1, 0}, {-1, 0}, {1, -1}, {-1, -1} };
 
 Stone::Stone() : Stone::Stone({boardSizeX/2, minYofPoints(pointsOfBody, numberOfBodyPoints)})	{}
@@ -84,12 +86,19 @@ bool Stone::whetherCollideWithWallsY(Stone & jakis)
 void Stone::draw(ostream & where) const
 {
 	::move(coordinates.y, coordinates.x);
-	printw("^");
+	printw("%c", mainCharacter);
 	for(int i = 0 ; i < numberOfBodyPoints ; i++)
 	{
 		::move(coordinates.y + pointsOfBody[i].y, coordinates.x + pointsOfBody[i].x);
-		printw("^");
+		printw("%c",mainCharacter);
 	}
 }
 
-
+position * Stone::getPointsOfBody(void)
+{
+	return pointsOfBody;
+}
+int Stone::getNumberOfBodyPoints(void)
+{
+	return numberOfBodyPoints;
+}

@@ -4,9 +4,9 @@
 using namespace std;
 
 char *choices[] = {
-	"Choice 1",
-	"Choice 2",
-	"Choice 3",
+	"Play the game",
+	"Save game",
+	"Load game",
 	"Choice 4",
 	"Exit",
 };
@@ -72,6 +72,23 @@ void Menu::start(void)
 	clrtoeol();
 	clear();
 	refresh();
+	switch (choice)
+	{
+	case 1:
+	{
+		this->servicedGame->playGame();
+		break;
+	}
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	}
+
 }
 
 void Menu::print_menu(WINDOW *menu_win, int highlight)
@@ -86,9 +103,9 @@ void Menu::print_menu(WINDOW *menu_win, int highlight)
 	{
 		if (highlight == i + 1) /* High light the present choice */
 		{
-			wattron(menu_win, A_REVERSE);
+			wattron(menu_win, A_BOLD);
 			mvwprintw(menu_win, y, x, "%s", choices[i]);
-			wattroff(menu_win, A_REVERSE);
+			wattroff(menu_win, A_BOLD);
 		}
 		else
 			mvwprintw(menu_win, y, x, "%s", choices[i]);

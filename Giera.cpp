@@ -16,7 +16,6 @@ using namespace std;
 
 int main()
 {
-	WINDOW *menu_win;
 	initscr();
 	noecho();
 	//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
@@ -24,8 +23,6 @@ int main()
 
 	Menu menu(gra);
 	menu.start();
-	gra.playGame();
-
 
 	refresh();
 	endwin();

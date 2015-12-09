@@ -23,6 +23,8 @@ public:
 	bool move(const int & dx, const int & dy);
 	bool setPosition(position & coords);
 	void draw(ostream & where) const;
+	position * getPointsOfBody(void);
+	int getNumberOfBodyPoints(void);
 
 protected:
 	bool whetherCollideWithPosition(const position & potentialCollide);

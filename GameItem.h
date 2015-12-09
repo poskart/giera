@@ -12,6 +12,9 @@
 
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <time.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -53,6 +56,8 @@ public:
 	void setLife(int & percent);
 	bool isAlive(void);
 	virtual void draw(ostream & where) const = 0;
+	virtual position * getPointsOfBody(void) = 0;
+	virtual int getNumberOfBodyPoints(void) = 0;
 
 
 protected:

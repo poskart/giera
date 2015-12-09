@@ -22,6 +22,7 @@ public:
 	void loadGame();
 	
 private:
+	WINDOW * gameWindow;
 	Board plansza;
 };
 

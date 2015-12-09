@@ -21,6 +21,8 @@ public:
 	bool move(const int & dx, const int & dy);
 	bool setPosition(position & coords);
 	void draw(ostream & where) const;
+	position * getPointsOfBody(void);
+	int getNumberOfBodyPoints(void);
 
 protected:
 	bool whetherCollideWithPosition(const position & potentialCollide);
@@ -30,6 +32,7 @@ protected:
 
 private:
 	const static short int numberOfBodyPoints = 5;
+	static char mainCharacter;
 	/**
 	 * array that describes size of the gameItem in each of direction
 	 * form the middle of Item (forward, right, back, left)
