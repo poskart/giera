@@ -7,6 +7,10 @@
 
 #include "EnemyItem.h"
 
+direction EnemyItem::attackDir = down;
+
+position EnemyItem::targetPos = {boardSizeX/2, boardSizeY/2};
+
 EnemyItem::EnemyItem()
 {
 	// TODO Auto-generated constructor stub
@@ -16,5 +20,10 @@ EnemyItem::EnemyItem()
 EnemyItem::~EnemyItem()
 {
 	// TODO Auto-generated destructor stub
+}
+
+void EnemyItem::getTargetPosition(GameItem * target)
+{
+	targetPos = target->getPosition();
 }
 

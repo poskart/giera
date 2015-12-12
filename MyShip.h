@@ -11,18 +11,23 @@
 #include "Spaceship.h"
 #include "NeutralItem.h"
 
-class MyShip : public NeutralItem, public Spaceship
+class MyShip : virtual public NeutralItem, virtual public Spaceship
 {
 public:
 	MyShip();
 	MyShip(position & newPos);
 	MyShip(const int & xx, const int & yy);
 	virtual ~MyShip();
+	GameItem * clone() { return new MyShip(*this); };
+	Spaceship * getInstance() { return this; };
+	direction getAttackDirection() { return attackDir; };
+
 
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
-	GameItem * clone() { return new MyShip(*this); };
+
+	bool updatePosition(long int ms);
 
 protected:
 
@@ -34,7 +39,6 @@ private:
 	*/
 	static position pointsOfBody[numberOfBodyPoints];
 	static char mainCharacter;
-
 };
 
 #endif /* MYSHIP_H_ */

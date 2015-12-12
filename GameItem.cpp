@@ -12,6 +12,8 @@ WINDOW * GameItem::win = NULL;
 GameItem::GameItem()
 {
 	lifePercentage = 100;
+	movementSpeed = 1;
+	lastUpdateTime = 0;
 }
 
 GameItem::~GameItem()
@@ -56,12 +58,12 @@ bool GameItem::move(const int & dx, const int & dy)
 	GameItem *obstacle = clone();
 	position aux{ this->coordinates.x + dx, this->coordinates.y + dy };
 	obstacle->forcePosition(aux);
-	if (!obstacle->whetherCollideWithWallsX(*obstacle))
+	if (!obstacle->whetherCollideWithWallsX(*obstacle) && dx != 0)
 	{
 		coordinates.x += dx;
 		wasMoved = true;
 	}
-	if (!obstacle->whetherCollideWithWallsY(*obstacle))
+	if (!obstacle->whetherCollideWithWallsY(*obstacle) && dy != 0)
 	{
 		coordinates.y += dy;
 		wasMoved = true;
@@ -112,23 +114,32 @@ bool GameItem::whetherCollideWithWallsY(GameItem & jakis)
 void GameItem::draw(ostream & where) const  
 {
 	mvwprintw(win, coordinates.y, coordinates.x, "%c", this->getMainCharacter());
-	for (int i = 0; i < this->getNumberOfBodyPoints(); i++)
+	position * pos = this->getPointsOfBody();
+	if (pos != nullptr)
 	{
-		mvwprintw(win, coordinates.y + this->getPointsOfBody()[i].y, coordinates.x + this->getPointsOfBody()[i].x,
-			"%c", this->getMainCharacter());
+		for (int i = 0; i < this->getNumberOfBodyPoints(); i++)
+		{
+			mvwprintw(win, coordinates.y + pos[i].y, coordinates.x + pos[i].x,
+				"%c", this->getMainCharacter());
+		}
 	}
+}
+
+bool GameItem::updatePosition(long int ms)
+{
+	return false;
 }
 
 bool isXinsideBoard(int x)
 {
-	if( x < gameBoardSizeX && x > 0)
+	if( x < (gameBoardSizeX -1) && x > 0)
 		return true;
 	return false;
 }
 
 bool isYinsideBoard(int y)
 {
-	if( y < gameBoardSizeY && y > 0)
+	if( y < (gameBoardSizeY - 1) && y > 0)
 		return true;
 	return false;
 }

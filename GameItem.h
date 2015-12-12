@@ -8,33 +8,7 @@
 #ifndef GAMEITEM_H_
 #define GAMEITEM_H_
 
-#include <curses.h>
-
-#include <vector>
-#include <iostream>
-#include <cstdlib>
-#include <time.h>
-#include <algorithm>
-#include <chrono>
-
-using namespace std;
-
-const int boardSizeX = 120;
-const int boardSizeY = 50;
-
-//The same as above + frame thickness
-const int gameBoardSizeX = boardSizeX + 2;
-const int gameBoardSizeY = boardSizeY + 2;
-
-typedef struct
-{
-	int x, y;
-}position;
-
-/**
- * enum for array which describes size of Item in each direction
- * from the middle (forward, right, back, left)
- */
+#include "settings.h"
 
 class GameItem
 {
@@ -60,14 +34,16 @@ public:
 	bool whetherCollideWithWalls(GameItem & jakis);
 	bool whetherCollideWithWallsX(GameItem & jakis);
 	bool whetherCollideWithWallsY(GameItem & jakis);
-	void draw(ostream & where) const ;
+	virtual void draw(ostream & where) const ;
+	virtual bool updatePosition(long int ms);
 
 
 protected:
 	position coordinates;
 	int lifePercentage;
+	int movementSpeed;
+	long int lastUpdateTime;
 	static WINDOW * win;
-	static int * cod;
 
 	void forcePosition(position & nowa);
 };

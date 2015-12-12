@@ -22,7 +22,7 @@ void Game::playGame(void)
 	plansza.initialize();
 	plansza.drawFrame();
 	plansza.drawItems();
-	wtimeout(gameWindow, 100);
+	wtimeout(gameWindow, 0);
 
 	int c = 0;
 	fflush(stdin);
@@ -33,21 +33,22 @@ void Game::playGame(void)
 			) - beginTime;
 		
 		c = wgetch(gameWindow);
-		fflush(stdin);
+		//fflush(stdin);
 		
-		plansza.update(timeCounter, c);
-		if (c != 0) {
-			mvwprintw(gameWindow, 12, 12, "Czas : %d", timeCounter / (1000));
-			mvwprintw(gameWindow, 13, 12, "Tutaj jest c: %c", c);
-		}
+		plansza.keyHandle(c);
+		plansza.update(timeCounter);
+
+		if (c == 's')
+			plansza.showItems();
 
 		if (c == 27)
 			break;
-		wclear(gameWindow);
-		plansza.drawFrame();
-		plansza.drawItems();
-
-		mvwprintw(gameWindow, 10, 10, "Keycode: %d, you pressed %c key..", (int)c, c);
+		if (!(timeCounter.count() % 50))
+		{
+			wclear(gameWindow);
+			plansza.drawFrame();
+			plansza.drawItems();
+		}
 	}
 }
 

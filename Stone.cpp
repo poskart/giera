@@ -39,3 +39,17 @@ char Stone::getMainCharacter(void) const
 {
 	return mainCharacter;
 }
+
+bool Stone::updatePosition(long int ms)
+{
+	if (ms - lastUpdateTime > (1000 / movementSpeed))
+	{
+		if (!move(0, attackDir))
+		{
+			lastUpdateTime = ms;
+			return false;
+		}
+		lastUpdateTime = ms;
+	}
+	return true;
+}

@@ -61,13 +61,13 @@ void Board::initialize(void)
 	myShip = new MyShip();
 
 	EnemyShip * nowy = new EnemyShip(30, 15);
-	enemies.push_back(nowy);
+	boardItems.push_back(nowy);
 
 	EnemyShip * nowy1 = new EnemyShip(60, 15);
-	enemies.push_back(nowy1);
+	boardItems.push_back(nowy1);
 
 	Stone * kamien = new Stone(45, 22);
-	enemies.push_back(kamien);
+	boardItems.push_back(kamien);
 
 	randomEnemy(0.8);
 	randomEnemy(1.2);
@@ -77,8 +77,8 @@ void Board::initialize(void)
 
 void Board::drawItems()
 {
-	vector<GameItem *>::iterator i = enemies.begin();
-	for (; i != enemies.end(); i++)
+	gameItemIterator i = boardItems.begin();
+	for (; i != boardItems.end(); i++)
 	{
 		cout << (*(*i));
 	}
@@ -124,22 +124,78 @@ void Board::randomEnemy(double difficultyLevel)
 			(-1)*minYofPoints(bodyPointsTable, N) + 1 };
 
 		nowy->setPosition(nowa);
-		enemies.push_back(nowy);
+		boardItems.push_back(nowy);
 	}
 }
 
-void Board::update(chrono::milliseconds & time, const int & key)
+void Board::showItems(void)
 {
+	int enemyShips = 0, stones = 0;
+	gameItemIterator it = boardItems.begin();
+	for (; it != boardItems.end(); it++)
+	{
+		if (dynamic_cast<EnemyShip *>(*it) != nullptr)
+			enemyShips++;
+		else if (dynamic_cast<Stone *>(*it) != nullptr)
+			stones++;
+		else;
+	}
+	mvwprintw(win, 16, 40, "Policzono:");
+	mvwprintw(win, 17, 40, "statki wroga: %d", enemyShips);
+	mvwprintw(win, 18, 40, "kamienie: %d", stones);
+	wrefresh(win);
+	getch();
+}
+
+void Board::update(chrono::milliseconds & time)
+{
+	EnemyItem::getTargetPosition(myShip);
+	gameItemIterator i = boardItems.begin();
+	for (; i != boardItems.end(); i++)
+	{
+		(*i)->updatePosition(time.count());
+	}
+	/*if(enemies.size() != 0)
+	enemies.erase(enemies.begin());*/
+	myShip->updatePosition(time.count());
+}
+
+void Board::keyHandle(const int & key)
+{
+	int dS = 1;
 	switch (key)
 	{
 	case KEY_UP:
+		myShip->move(0, -dS);
 		break;
 	case KEY_DOWN:
+		myShip->move(0, dS);
 		break;
 	case KEY_RIGHT:
+		myShip->move(dS, 0);
 		break;
 	case KEY_LEFT:
+		myShip->move(-dS, 0);
 		break;
+	case CTL_UP:
+		myShip->move(0, -3 * dS);
+		break;
+	case CTL_DOWN:
+		myShip->move(0, 3 * dS);
+		break;
+	case CTL_RIGHT:
+		myShip->move(3 * dS, 0);
+		break;
+	case CTL_LEFT:
+		myShip->move(-3 * dS, 0);
+		break;
+	case ' ':
+	{
+		position pos = myShip->getPosition();
+		Bullet * bul = new MyBullet(pos.x, pos.y);
+		myShip->shoot(bul);
+		break;
+	}
 	default:
 		refresh();
 		break;

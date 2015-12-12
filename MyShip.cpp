@@ -39,3 +39,9 @@ char MyShip::getMainCharacter(void) const
 {
 	return mainCharacter;
 }
+
+bool MyShip::updatePosition(long int ms)
+{
+	return updateBullets(ms);
+}
+

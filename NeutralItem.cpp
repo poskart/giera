@@ -7,6 +7,8 @@
 
 #include "NeutralItem.h"
 
+direction NeutralItem::attackDir = up;
+
 NeutralItem::NeutralItem()
 {
 	// TODO Auto-generated constructor stub

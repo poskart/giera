@@ -15,6 +15,8 @@
 #include "Stone.h"
 #include "EnemyShip.h"
 #include "MyShip.h"
+#include "MyBullet.h"
+#include "EnemyBullet.h"
 
 using namespace std;
 
@@ -29,16 +31,18 @@ public:
 	void drawItems(void);
 	void initialize(void);
 	void randomEnemy(double difficultyLevel);
-	void Board::update(chrono::milliseconds & time, const int & key);
+	void showItems(void);
+	void update(chrono::milliseconds & time);
+	void keyHandle(const int & key);
+
 
 	Board();
 	Board(WINDOW * fromGame);
 	virtual ~Board();
 private:
 	WINDOW * win;
-	vector<GameItem *> enemies;
-	vector<GameItem *> neutrals;
-	GameItem * myShip;
+	gameItemContainer boardItems;
+	MyShip * myShip;
 
 	static char frameHorizontalLine[gameBoardSizeX + 1];
 

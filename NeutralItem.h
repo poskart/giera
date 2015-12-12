@@ -14,6 +14,8 @@ class NeutralItem : virtual public GameItem
 public:
 	NeutralItem();
 	virtual ~NeutralItem();
+protected:
+	static direction attackDir;
 };
 
 #endif /* NEUTRALITEM_H_ */

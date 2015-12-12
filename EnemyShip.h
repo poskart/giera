@@ -10,6 +10,7 @@
 
 #include "EnemyItem.h"
 #include "Spaceship.h"
+#include "EnemyBullet.h"
 
 class EnemyShip : public EnemyItem, public Spaceship
 {
@@ -23,7 +24,11 @@ public:
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
+	bool updatePosition(long int ms);
+
 	GameItem * clone() { return new EnemyShip(*this); };
+	Spaceship * getInstance() { return this; };
+	direction getAttackDirection() { return attackDir; };
 
 protected:
 
@@ -35,6 +40,8 @@ private:
 	 */
 	static position pointsOfBody[numberOfBodyPoints];
 	static char mainCharacter;
+	long int previousShootTime;
+	int betweenShotMeanTime;	//ms
 };
 
 #endif /* ENEMYSHIP_H_ */
