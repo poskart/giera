@@ -34,11 +34,16 @@ public:
 	void showItems(void);
 	void update(chrono::milliseconds & time);
 	void keyHandle(const int & key);
-
+	void updateMovements(chrono::milliseconds & time);
+	void collisionDetect(void);
+	void insertEnemy(chrono::milliseconds & time);
 
 	Board();
 	Board(WINDOW * fromGame);
 	virtual ~Board();
+protected:
+	double difficultyLevel;
+	int insertNewEnemyMeanTime;
 private:
 	WINDOW * win;
 	gameItemContainer boardItems;
@@ -46,6 +51,10 @@ private:
 
 	static char frameHorizontalLine[gameBoardSizeX + 1];
 
+	long int prevInsertTime;
+	int newInsertTime;
+	long int incrementDifficultyPrevTime;
+	int incrementDifficultyMeanTime;
 	//double & probabilityDistributeFunction(double & x, double & difficulty);
 };
 

@@ -80,22 +80,27 @@ bool GameItem::setPosition(position & coords)
 }
 
 
-bool GameItem::whetherCollideWithPosition(const position & potentialCollide)
+bool GameItem::whetherCollideWithPosition(const position * potentialCollide)
 {
-	for (int i = 0; i < getNumberOfBodyPoints(); i++)
-		if ((potentialCollide.x == getPointsOfBody()[i].x) && (potentialCollide.y == getPointsOfBody()[i].y))
+	if ((*potentialCollide) == coordinates)
+		return true;
+	position * tmpPos = getPointsOfBody();
+	for (int i = 0; i < getNumberOfBodyPoints(); i++, tmpPos++)
+	{
+		if ((*potentialCollide) == ((*tmpPos) + coordinates))//((potentialCollide->x == (tmpPos->x + coordinates.x)) && (potentialCollide->y == (tmpPos->y + coordinates.y)))
 			return true;
+	}
 	return false;
 }
 
-bool GameItem::whetherCollideWithWalls(GameItem & jakis)
+bool GameItem::whetherCollideWithWalls(const GameItem & jakis) const
 {
 	if (whetherCollideWithWallsX(jakis) && whetherCollideWithWallsY(jakis))
 		return true;
 	return false;
 }
 
-bool GameItem::whetherCollideWithWallsX(GameItem & jakis)
+bool GameItem::whetherCollideWithWallsX(const GameItem & jakis) const
 {
 	if (isXinsideBoard(jakis.coordinates.x + maxXofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
 		&& isXinsideBoard(jakis.coordinates.x + minXofPoints(getPointsOfBody(), getNumberOfBodyPoints())))
@@ -103,7 +108,7 @@ bool GameItem::whetherCollideWithWallsX(GameItem & jakis)
 	return true;
 }
 
-bool GameItem::whetherCollideWithWallsY(GameItem & jakis)
+bool GameItem::whetherCollideWithWallsY(const GameItem & jakis) const
 {
 	if (isYinsideBoard(jakis.coordinates.y + maxYofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
 		&& isYinsideBoard(jakis.coordinates.y + minYofPoints(getPointsOfBody(), getNumberOfBodyPoints())))
@@ -126,6 +131,11 @@ void GameItem::draw(ostream & where) const
 }
 
 bool GameItem::updatePosition(long int ms)
+{
+	return false;
+}
+
+bool GameItem::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	return false;
 }

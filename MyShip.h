@@ -28,15 +28,14 @@ public:
 	char getMainCharacter(void) const;
 
 	bool updatePosition(long int ms);
+	bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
+	bool whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 
 private:
 	const static short int numberOfBodyPoints = 3;
-	/**
-	* array that describes size of the gameItem in each of direction
-	* form the middle of Item (forward, right, back, left)
-	*/
+
 	static position pointsOfBody[numberOfBodyPoints];
 	static char mainCharacter;
 };

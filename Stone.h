@@ -7,6 +7,7 @@
 
 #ifndef STONE_H_
 #define STONE_H_
+
 #include "EnemyItem.h"
 
 class Stone : public EnemyItem
@@ -24,18 +25,23 @@ public:
 	GameItem * clone() { return new Stone(*this); };
 
 	bool updatePosition(long int ms);
+	bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 
 private:
 	const static short int numberOfBodyPoints = 5;
+	const static short int numberOfBodyPointsWhenDisappears = 2;
+
 	static char mainCharacter;
 	/**
 	 * array that describes size of the gameItem in each of direction
 	 * form the middle of Item (forward, right, back, left)
 	 */
 	static position pointsOfBody[numberOfBodyPoints];
+	static position pointsWhenDisappears[numberOfBodyPointsWhenDisappears];
 
+	bool isStoneAtTheEndOfTheBoard(void) const;
 };
 
 #endif /* STONE_H_ */

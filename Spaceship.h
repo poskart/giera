@@ -9,6 +9,9 @@
 #define SPACESHIP_H_
 #include "GameItem.h"
 #include "Bullet.h"
+#include "EnemyItem.h"
+#include "NeutralItem.h"
+
 class Spaceship : public virtual GameItem
 {
 public:
@@ -25,6 +28,8 @@ public:
 	void killed(gameItemIterator it);
 
 	bool updateBullets(long int ms);
+	bool handleBulletsHits(gameItemContainer * boardItems);
+	bool saveBulletsAfterKilled(gameItemContainer * boardItems, Spaceship * killed);
 
 protected:
 	mutable gameItemContainer bullets;

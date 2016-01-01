@@ -45,3 +45,12 @@ bool MyShip::updatePosition(long int ms)
 	return updateBullets(ms);
 }
 
+bool MyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+{
+	return whetherBulletHit(boardItems, myShip);
+}
+
+bool MyShip::whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip)
+{
+	return handleBulletsHits(boardItems);
+}

@@ -9,17 +9,29 @@
 
 char Board::frameHorizontalLine[] = { 0 };
 
-Board::Board() {}
+Board::Board() 
+{
+	difficultyLevel = initialDifficultyLevel;
+	insertNewEnemyMeanTime = initialInsertNewEnemyMeanTime;
+	prevInsertTime = 1000;
+	newInsertTime = 1000;
+	incrementDifficultyPrevTime = 1000;
+	incrementDifficultyMeanTime = initialIncrementDifficultyMeanTime;
+}
 
 Board::Board(WINDOW * fromGame)
 {
 	win = fromGame;
+
+	difficultyLevel = initialDifficultyLevel;
+	insertNewEnemyMeanTime = initialInsertNewEnemyMeanTime;
+	prevInsertTime = 1000;
+	newInsertTime = 1000;
+	incrementDifficultyPrevTime = 1000;
+	incrementDifficultyMeanTime = initialIncrementDifficultyMeanTime;
 }
 
-Board::~Board()
-{
-	// TODO Auto-generated destructor stub
-}
+Board::~Board() {}
 
 void Board::init(WINDOW * fromGame)
 {
@@ -69,11 +81,16 @@ void Board::initialize(void)
 	Stone * kamien = new Stone(45, 22);
 	boardItems.push_back(kamien);
 
-	randomEnemy(0.8);
-	randomEnemy(1.2);
+	randomEnemy(1.8);
+	randomEnemy(2.2);
+	randomEnemy(2.2);
+	randomEnemy(2.2);
+	randomEnemy(2);
+	randomEnemy(2.1);
+	randomEnemy(2.1);
+	randomEnemy(2.1);
+	randomEnemy(2.2);
 }
-
-
 
 void Board::drawItems()
 {
@@ -82,8 +99,6 @@ void Board::drawItems()
 	{
 		cout << (*(*i));
 	}
-	/*if(enemies.size() != 0)
-		enemies.erase(enemies.begin());*/
 	cout<<*myShip;
 	wrefresh(win);
 }
@@ -91,13 +106,13 @@ void Board::drawItems()
 void Board::randomEnemy(double difficultyLevel)
 {
 	//get random x form range 0 - difficultyLevel;
-	double x = (rand() % 100) / 100 * difficultyLevel;		
+	double x = ((rand() % 100) / 100.0) * difficultyLevel;		
 	//get random y form range 0 - difficultyLevel;
-	double y = (rand() % 100) / 100 * difficultyLevel;
+	double y = ((rand() % 100) / 100.0) * difficultyLevel;
 	//get floor of min(x,y)
 	int enemyIndex = (int) min(x, y);	
 
-	GameItem * nowy = NULL;
+	GameItem * nowy = nullptr;
 	switch (enemyIndex)
 	{
 	case 0:
@@ -107,6 +122,7 @@ void Board::randomEnemy(double difficultyLevel)
 		nowy = new EnemyShip();
 		break;
 	case 2:
+		nowy = new EnemyShip();
 		break;
 	default:
 		break;
@@ -143,26 +159,29 @@ void Board::showItems(void)
 	mvwprintw(win, 16, 40, "Policzono:");
 	mvwprintw(win, 17, 40, "statki wroga: %d", enemyShips);
 	mvwprintw(win, 18, 40, "kamienie: %d", stones);
+	mvwprintw(win, 19, 40, "Poziom trudnosci: %lf", difficultyLevel);
+	mvwprintw(win, 20, 40, "Czas enemy insert: %d", insertNewEnemyMeanTime);
 	wrefresh(win);
 	getch();
 }
 
 void Board::update(chrono::milliseconds & time)
 {
-	EnemyItem::getTargetPosition(myShip);
-	gameItemIterator i = boardItems.begin();
-	for (; i != boardItems.end(); i++)
+	updateMovements(time);
+	collisionDetect();
+	insertEnemy(time);
+	if (time.count() - incrementDifficultyPrevTime > incrementDifficultyMeanTime)
 	{
-		(*i)->updatePosition(time.count());
+		insertNewEnemyMeanTime--;
+		difficultyLevel += 0.002;
+		incrementDifficultyPrevTime = time.count();
 	}
-	/*if(enemies.size() != 0)
-	enemies.erase(enemies.begin());*/
-	myShip->updatePosition(time.count());
 }
 
 void Board::keyHandle(const int & key)
 {
 	int dS = 1;
+	int ctrl = 3*dS;
 	switch (key)
 	{
 	case KEY_UP:
@@ -178,16 +197,24 @@ void Board::keyHandle(const int & key)
 		myShip->move(-dS, 0);
 		break;
 	case CTL_UP:
-		myShip->move(0, -3 * dS);
+		while (ctrl--)
+			if (myShip->move(0, -ctrl))
+				break;
 		break;
 	case CTL_DOWN:
-		myShip->move(0, 3 * dS);
+		while (ctrl--)
+			if (myShip->move(0, ctrl))
+				break;
 		break;
 	case CTL_RIGHT:
-		myShip->move(3 * dS, 0);
+		while (ctrl--)
+			if (myShip->move(ctrl, 0))
+				break;
 		break;
 	case CTL_LEFT:
-		myShip->move(-3 * dS, 0);
+		while (ctrl--)
+			if (myShip->move(-ctrl, 0))
+				break;
 		break;
 	case ' ':
 	{
@@ -202,6 +229,54 @@ void Board::keyHandle(const int & key)
 	}
 }
 
+void Board::updateMovements(chrono::milliseconds & time)
+{	
+	EnemyItem::getTargetPosition(myShip);
+	gameItemIterator i = boardItems.begin();
+	while(i != boardItems.end())
+	{
+		if (!((*i)->updatePosition(time.count())))
+		{
+			if(dynamic_cast<Stone *>(*i) != nullptr)
+			{
+				i = boardItems.erase(i);
+				continue;
+			}
+			if (dynamic_cast<Bullet *>(*i) != nullptr)
+			{  
+				i = boardItems.erase(i);
+				continue;
+			}
+		}
+		i++;
+	}
+	myShip->updatePosition(time.count());
+}
+
+void Board::collisionDetect(void)
+{
+	gameItemIterator i = boardItems.begin();
+	for (; i != boardItems.end(); i++)
+	{
+		if ((*i)->updateColision(&boardItems, myShip))
+		{
+			mvwprintw(win, 16, 40, "Trafiono cie !!! ");
+		}
+	}
+		
+	if(myShip->updateColision(&boardItems, myShip))
+		mvwprintw(win, 16, 40, "Trafiles wrooooga !!! ");
+}
+
+void Board::insertEnemy(chrono::milliseconds & time)
+{
+	if (time.count() - prevInsertTime > newInsertTime)
+	{
+		randomEnemy(difficultyLevel);
+		newInsertTime = (rand() % (2 * insertNewEnemyMeanTime)) + 500;
+		prevInsertTime = time.count();
+	}
+}
 //double & Board::probabilityDistributeFunction(double & x, double & difficulty)
 //{
 //	double out = (-x + difficulty);

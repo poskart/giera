@@ -4,12 +4,12 @@ char EnemyBullet::mainCharacter = '!';
 
 EnemyBullet::EnemyBullet(void) : speed(1) 
 {
-	movementSpeed = 10;
+	movementSpeed = 12;
 }
 
 EnemyBullet::EnemyBullet(const int & xx, const int & yy) : speed(1)
 {
-	movementSpeed = 10;
+	movementSpeed = 12;
 	coordinates.x = xx;
 	coordinates.y = yy;
 }
@@ -31,7 +31,7 @@ char EnemyBullet::getMainCharacter(void) const
 
 bool EnemyBullet::updatePosition(long int ms)
 {
-	if (ms - lastUpdateTime > 1000 / movementSpeed)
+	if (ms - lastUpdateTime > gameSlowness / movementSpeed)
 	{
 		if (!move(0, speed*attackDir))
 		{

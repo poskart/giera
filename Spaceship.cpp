@@ -63,6 +63,7 @@ bool Spaceship::updateBullets(long int ms)
 
 	while (it != bullets.end())
 	{
+		//jf there will not be a chance to update position
 		if (!(*it)->updatePosition(ms))
 		{
 			it = bullets.erase(it);
@@ -73,4 +74,52 @@ bool Spaceship::updateBullets(long int ms)
 		it++;
 	}
 	return ifAnyOfBullets;
+}
+
+bool Spaceship::handleBulletsHits(gameItemContainer * boardItems)
+{
+	//check all items in board for each of bullets
+	bool wasColision = false;
+	bool wasAtLeastOneHit = false;
+	position * tmpPos;
+	int numberOfPoints = 0;
+	gameItemIterator bulletIt = bullets.begin();
+	while (bulletIt != bullets.end())
+	{
+		gameItemIterator itemIt = boardItems->begin();
+		for (; itemIt != boardItems->end(); itemIt++)
+		{
+			//check if bullet hit in the middle of the item
+        	if ((*itemIt)->whetherCollideWithPosition(&((*bulletIt)->getPosition())))
+ 			{
+				wasColision = true;
+				wasAtLeastOneHit = true;
+				//save deserted bullets
+				if((dynamic_cast<Spaceship *>(*(itemIt)) != nullptr) )
+	 	 			saveBulletsAfterKilled(boardItems, dynamic_cast<Spaceship *>(*(itemIt)));
+				boardItems->remove(*itemIt);
+				break;
+			}
+		}
+		//delete bullet
+		if (wasColision)
+		{
+			bulletIt = bullets.erase(bulletIt);
+			wasColision = false;
+			continue;
+		}
+		bulletIt++;
+	}
+	return wasAtLeastOneHit;
+}
+//check if bullet hit in 
+bool Spaceship::saveBulletsAfterKilled(gameItemContainer * boardItems, Spaceship * killed)
+ {
+	bool wasAnySaved = false;
+	for (gameItemIterator it = killed->bullets.begin(); it != killed->bullets.end(); it++)
+	{ 
+ 		boardItems->push_back(*it);
+		wasAnySaved = true;
+	}
+	return wasAnySaved;
 }

@@ -32,8 +32,8 @@ void Game::playGame(void)
 			system_clock::now().time_since_epoch()
 			) - beginTime;
 		
+		nodelay(gameWindow, true);
 		c = wgetch(gameWindow);
-		//fflush(stdin);
 		
 		plansza.keyHandle(c);
 		plansza.update(timeCounter);
@@ -41,14 +41,14 @@ void Game::playGame(void)
 		if (c == 's')
 			plansza.showItems();
 
-		if (c == 27)
-			break;
 		if (!(timeCounter.count() % 50))
 		{
 			wclear(gameWindow);
 			plansza.drawFrame();
 			plansza.drawItems();
 		}
+		if (c == 27)
+			break;
 	}
 }
 

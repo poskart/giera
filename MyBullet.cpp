@@ -2,14 +2,14 @@
 
 char MyBullet::mainCharacter = '^';
 
-MyBullet::MyBullet(void) : speed(2) 
+MyBullet::MyBullet(void) : speed(1) 
 {
-	movementSpeed = 3;
+	movementSpeed = 15;
 }
 
-MyBullet::MyBullet(const int & xx, const int & yy) : speed(2)
+MyBullet::MyBullet(const int & xx, const int & yy) : speed(1)
 {
-	movementSpeed = 3;
+	movementSpeed = 15;
 	coordinates.x = xx;
 	coordinates.y = yy;
 }
@@ -31,7 +31,7 @@ char MyBullet::getMainCharacter(void) const
 
 bool MyBullet::updatePosition(long int ms)
 {
-	if (ms - lastUpdateTime > 1000 / movementSpeed)
+	if (ms - lastUpdateTime > gameSlowness / movementSpeed)
 	{
 		if (!move(0, speed*attackDir))
 		{

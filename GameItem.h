@@ -30,13 +30,13 @@ public:
 
 	bool move(const int & dx, const int & dy);
 	bool setPosition(position & coords);
-	bool whetherCollideWithPosition(const position & potentialCollide);
-	bool whetherCollideWithWalls(GameItem & jakis);
-	bool whetherCollideWithWallsX(GameItem & jakis);
-	bool whetherCollideWithWallsY(GameItem & jakis);
+	bool whetherCollideWithPosition(const position * potentialCollide);
+	bool whetherCollideWithWalls(const GameItem & jakis) const;
+	bool whetherCollideWithWallsX(const GameItem & jakis) const;
+	bool whetherCollideWithWallsY(const GameItem & jakis) const;
 	virtual void draw(ostream & where) const ;
 	virtual bool updatePosition(long int ms);
-
+	virtual bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 	position coordinates;
