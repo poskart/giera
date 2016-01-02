@@ -135,9 +135,9 @@ bool GameItem::updatePosition(long int ms)
 	return false;
 }
 
-bool GameItem::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+GameItem * GameItem::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
-	return false;
+	return nullptr;
 }
 
 bool isXinsideBoard(int x)

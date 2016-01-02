@@ -66,35 +66,29 @@ bool EnemyShip::updatePosition(long int ms)
 		move(targetDx, targetDy);
 		lastUpdateTime = ms;
 
-		if (xPositionError < 5 && xPositionError > -5 && (ms - previousShootTime) > (rand()%(2*betweenShotMeanTime) + 500))
+		if (xPositionError < 5 && xPositionError > -5 )
 		{
-			Bullet * pocisk = new EnemyBullet({ coordinates.x, coordinates.y });
-			shoot(pocisk);
-			previousShootTime = ms;
+			shootEnabled = true;
 		}
 	}
-	return updateBullets(ms);
+	return true;
 }
 
-bool EnemyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+GameItem * EnemyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
-	return whetherBulletHit(boardItems, myShip);
+	return nullptr;
 }
 
-bool EnemyShip::whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip)
+bool EnemyShip::shootIfShould(gameItemContainer * boardItems, long int ms)
 {
-	handleBulletsHits(boardItems);
-
-	//check whether bullets hit myShip
-	gameItemIterator bulletIt = bullets.begin();
-	while (bulletIt != bullets.end())
+	if (shootEnabled &&
+		((ms - previousShootTime) > (rand() % (2 * betweenShotMeanTime) + 500)))
 	{
-		if (myShip->whetherCollideWithPosition(&((*bulletIt)->getPosition())))
-		{
-			bullets.erase(bulletIt);
-			return true;
-		}
-		bulletIt++;
+		Bullet * pocisk = new EnemyBullet({ coordinates.x, coordinates.y });
+		shoot(pocisk, boardItems);
+		previousShootTime = ms;
+		shootEnabled = false;
+		return true;
 	}
 	return false;
 }

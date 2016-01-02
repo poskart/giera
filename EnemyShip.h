@@ -27,8 +27,9 @@ public:
 	bool updatePosition(long int ms);
 	
 	//check whether bullets hits sth, if nyShip hit then return tru e
-	bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
+	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
 	bool whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip);
+	bool shootIfShould(gameItemContainer * boardItems, long int ms);
 
 	GameItem * clone() { return new EnemyShip(*this); };
 	Spaceship * getInstance() { return this; };

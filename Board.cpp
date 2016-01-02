@@ -220,7 +220,7 @@ void Board::keyHandle(const int & key)
 	{
 		position pos = myShip->getPosition();
 		Bullet * bul = new MyBullet(pos.x, pos.y);
-		myShip->shoot(bul);
+		myShip->shoot(bul, &boardItems);
 		break;
 	}
 	default:
@@ -248,6 +248,11 @@ void Board::updateMovements(chrono::milliseconds & time)
 				continue;
 			}
 		}
+		if (dynamic_cast<EnemyShip *>(*i) != nullptr)
+		{
+			EnemyShip * tmpShip = dynamic_cast<EnemyShip *>((*i));
+			tmpShip->shootIfShould(&boardItems, time.count());
+		}
 		i++;
 	}
 	myShip->updatePosition(time.count());
@@ -255,17 +260,34 @@ void Board::updateMovements(chrono::milliseconds & time)
 
 void Board::collisionDetect(void)
 {
+	int tmp = 1;
 	gameItemIterator i = boardItems.begin();
-	for (; i != boardItems.end(); i++)
+	GameItem * tmpPtr = (*i);
+	while( i != boardItems.end())
 	{
-		if ((*i)->updateColision(&boardItems, myShip))
+		//If there sth hit sth
+		if ((tmpPtr = (*i)->updateColision(&boardItems, myShip)) != nullptr)
 		{
-			mvwprintw(win, 16, 40, "Trafiono cie !!! ");
+			(*i) = tmpPtr;
+			if (dynamic_cast<Bullet *>(*i) != nullptr)
+			{
+				if (dynamic_cast<MyBullet *>(*i) != nullptr)
+				{
+					mvwprintw(win, 16, 40, "Trafiles wrooooga !!! ");
+				}
+				else if (dynamic_cast<EnemyBullet *>(*i) != nullptr)
+				{
+					mvwprintw(win, 16, 40, "Trafiono cie !!! ");
+				}
+				else
+					;
+				i = boardItems.erase(i);
+				continue;
+			}
 		}
+		tmp++;
+		i++;
 	}
-		
-	if(myShip->updateColision(&boardItems, myShip))
-		mvwprintw(win, 16, 40, "Trafiles wrooooga !!! ");
 }
 
 void Board::insertEnemy(chrono::milliseconds & time)
@@ -277,6 +299,7 @@ void Board::insertEnemy(chrono::milliseconds & time)
 		prevInsertTime = time.count();
 	}
 }
+
 //double & Board::probabilityDistributeFunction(double & x, double & difficulty)
 //{
 //	double out = (-x + difficulty);

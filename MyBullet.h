@@ -16,6 +16,7 @@ public:
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
 	bool updatePosition(long int ms);
+	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 	int speed;

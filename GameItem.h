@@ -36,7 +36,7 @@ public:
 	bool whetherCollideWithWallsY(const GameItem & jakis) const;
 	virtual void draw(ostream & where) const ;
 	virtual bool updatePosition(long int ms);
-	virtual bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
+	virtual GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 	position coordinates;

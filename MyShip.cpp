@@ -40,17 +40,12 @@ char MyShip::getMainCharacter(void) const
 	return mainCharacter;
 }
 
+GameItem * MyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+{
+	return nullptr;
+}
+
 bool MyShip::updatePosition(long int ms)
 {
-	return updateBullets(ms);
-}
-
-bool MyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
-{
-	return whetherBulletHit(boardItems, myShip);
-}
-
-bool MyShip::whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip)
-{
-	return handleBulletsHits(boardItems);
+	return true;
 }

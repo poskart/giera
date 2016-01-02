@@ -65,21 +65,21 @@ bool Stone::updatePosition(long int ms)
 	return true;
 }
 
-bool Stone::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+GameItem * Stone::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	//check all items in board for each of bullets
 	position * middlePos = &(myShip->getPosition());
 	if (this->whetherCollideWithPosition(middlePos))
-		return true;
+		return this;
 	position * tmpPos = (myShip->getPointsOfBody());
 	int numberOfPoints = myShip->getNumberOfBodyPoints();
 	for (int i = 0; i < numberOfPoints; i++, tmpPos++)
 	{
 		position tmp = (*tmpPos) + (*middlePos);
 		if (this->whetherCollideWithPosition(&tmp))
-			return true;
+			return this;
 	}
-	return false;
+	return nullptr;
 }
 
 bool Stone::isStoneAtTheEndOfTheBoard(void) const

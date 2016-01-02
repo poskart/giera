@@ -25,7 +25,7 @@ public:
 	GameItem * clone() { return new Stone(*this); };
 
 	bool updatePosition(long int ms);
-	bool updateColision(gameItemContainer * boardItems, GameItem * myShip);
+	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 

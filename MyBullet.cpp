@@ -42,3 +42,23 @@ bool MyBullet::updatePosition(long int ms)
 	}
 	return true;
 }
+
+GameItem * MyBullet::updateColision(gameItemContainer * boardItems, GameItem * myShip)
+{
+	//check all items in board for each of bullets
+
+	gameItemIterator itemIt = boardItems->begin();
+	for (; itemIt != boardItems->end(); itemIt++)
+	{
+		if ((*itemIt) == this)
+			continue;
+		//check if bullet hit in the middle of the item
+		if ((*itemIt)->whetherCollideWithPosition(&((this)->getPosition())))
+		{	
+			boardItems->remove(*itemIt);
+			return this;
+		}
+	}
+	
+	return nullptr;
+}
