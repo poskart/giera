@@ -38,19 +38,8 @@ void Spaceship::shoot(gameItemContainer * boardItems)
 	Spaceship::shoot(new Bullet(), boardItems );
 }
 
-void Spaceship::killed(gameItemIterator it)
-{
-	bullets.erase(it);
-}
-
 void Spaceship::draw(ostream & where) const
 {
 	GameItem::draw(where);
-	const gameItemIterator it = bullets.begin();
-	gameItemIterator i = it;
-	for (; i != bullets.end(); i++)
-	{
-		cout << (*(*i));
-	}
 	wrefresh(win);
 }

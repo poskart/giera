@@ -48,6 +48,8 @@ GameItem * MyBullet::updateColision(gameItemContainer * boardItems, GameItem * m
 	//check all items in board for each of bullets
 
 	gameItemIterator itemIt = boardItems->begin();
+	if (itemIt == boardItems->end())
+		return nullptr;
 	for (; itemIt != boardItems->end(); itemIt++)
 	{
 		if ((*itemIt) == this)

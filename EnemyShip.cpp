@@ -81,8 +81,9 @@ GameItem * EnemyShip::updateColision(gameItemContainer * boardItems, GameItem * 
 
 bool EnemyShip::shootIfShould(gameItemContainer * boardItems, long int ms)
 {
+	int shootTimePeriod = (rand() % (2 * betweenShotMeanTime) + 1000);
 	if (shootEnabled &&
-		((ms - previousShootTime) > (rand() % (2 * betweenShotMeanTime) + 500)))
+		((ms - previousShootTime) > shootTimePeriod))
 	{
 		Bullet * pocisk = new EnemyBullet({ coordinates.x, coordinates.y });
 		shoot(pocisk, boardItems);

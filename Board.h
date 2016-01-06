@@ -41,9 +41,11 @@ public:
 	Board();
 	Board(WINDOW * fromGame);
 	virtual ~Board();
+
 protected:
 	double difficultyLevel;
 	int insertNewEnemyMeanTime;
+
 private:
 	WINDOW * win;
 	gameItemContainer boardItems;

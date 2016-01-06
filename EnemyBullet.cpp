@@ -47,6 +47,8 @@ GameItem * EnemyBullet::updateColision(gameItemContainer * boardItems, GameItem 
 {
 	//check all items in board for this bullet
 	gameItemIterator itemIt = boardItems->begin();
+	if (itemIt == boardItems->end())
+		return nullptr;
 	for (; itemIt != boardItems->end(); itemIt++)
 	{
 		if ((*itemIt) == this)
@@ -59,6 +61,8 @@ GameItem * EnemyBullet::updateColision(gameItemContainer * boardItems, GameItem 
 			return this;
 		}
 	}
+	if (myShip->whetherCollideWithPosition(&((this)->getPosition())))
+		return myShip;
 
 	return nullptr;
 }

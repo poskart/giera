@@ -95,9 +95,12 @@ void Board::initialize(void)
 void Board::drawItems()
 {
 	gameItemIterator i = boardItems.begin();
-	for (; i != boardItems.end(); i++)
+	if (i != boardItems.end())
 	{
-		cout << (*(*i));
+		for (; i != boardItems.end(); i++)
+		{
+			cout << (*(*i));
+		}
 	}
 	cout<<*myShip;
 	wrefresh(win);
@@ -148,6 +151,8 @@ void Board::showItems(void)
 {
 	int enemyShips = 0, stones = 0;
 	gameItemIterator it = boardItems.begin();
+	if (it == boardItems.end())
+		return;
 	for (; it != boardItems.end(); it++)
 	{
 		if (dynamic_cast<EnemyShip *>(*it) != nullptr)
@@ -233,21 +238,26 @@ void Board::updateMovements(chrono::milliseconds & time)
 {	
 	EnemyItem::getTargetPosition(myShip);
 	gameItemIterator i = boardItems.begin();
+	if (i == boardItems.end())
+		return;
 	while(i != boardItems.end())
 	{
 		if (!((*i)->updatePosition(time.count())))
 		{
+			//if stone went to the end of the board
 			if(dynamic_cast<Stone *>(*i) != nullptr)
 			{
 				i = boardItems.erase(i);
 				continue;
 			}
+			//if bullet went to the end of the board
 			if (dynamic_cast<Bullet *>(*i) != nullptr)
 			{  
 				i = boardItems.erase(i);
 				continue;
 			}
 		}
+		//Every enemy ship shoot when it's commited to shot
 		if (dynamic_cast<EnemyShip *>(*i) != nullptr)
 		{
 			EnemyShip * tmpShip = dynamic_cast<EnemyShip *>((*i));
@@ -255,19 +265,28 @@ void Board::updateMovements(chrono::milliseconds & time)
 		}
 		i++;
 	}
-	myShip->updatePosition(time.count());
 }
 
 void Board::collisionDetect(void)
 {
 	int tmp = 1;
 	gameItemIterator i = boardItems.begin();
+	if (i == boardItems.end())
+		return;
 	GameItem * tmpPtr = (*i);
 	while( i != boardItems.end())
 	{
 		//If there sth hit sth
 		if ((tmpPtr = (*i)->updateColision(&boardItems, myShip)) != nullptr)
 		{
+			//if myShip was hit by Bullet
+			if (tmpPtr == myShip)
+			{
+				mvwprintw(win, 16, 40, "Trafil cie zlowrogi pocisk!!! ");
+				i++;
+				continue;
+			}
+			
 			(*i) = tmpPtr;
 			if (dynamic_cast<Bullet *>(*i) != nullptr)
 			{
@@ -283,6 +302,10 @@ void Board::collisionDetect(void)
 					;
 				i = boardItems.erase(i);
 				continue;
+			}
+			else if (dynamic_cast<Stone *>(*i) != nullptr)
+			{
+				mvwprintw(win, 16, 40, "Trafil cie kamien kosmiczny!!! ");
 			}
 		}
 		tmp++;

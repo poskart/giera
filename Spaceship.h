@@ -25,10 +25,8 @@ public:
 	template<typename T>
 	void shoot(T * nowy, gameItemContainer * boardItems);
 	void shoot(gameItemContainer * boardItems);
-	void killed(gameItemIterator it);
 
 protected:
-	mutable gameItemContainer bullets;
 	bool shootEnabled;
 };
 
