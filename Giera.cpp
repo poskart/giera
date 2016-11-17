@@ -22,7 +22,7 @@ int main()
 	Game gra;
 
 	Menu menu(gra);
-	menu.start();
+	while(menu.start());
 
 	refresh();
 	endwin();

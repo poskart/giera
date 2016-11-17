@@ -1,25 +1,25 @@
 /*
- * EnemyShip.h
+ * SimpleEnemyShip.h
  *
  *  Created on: 5 gru 2015
  *      Author: piotr
  */
 
-#ifndef ENEMYSHIP_H_
-#define ENEMYSHIP_H_
+#ifndef SimpleEnemyShip_H_
+#define SimpleEnemyShip_H_
 
 #include "EnemyItem.h"
 #include "Spaceship.h"
 #include "EnemyBullet.h"
 
-class EnemyShip : public EnemyItem, public Spaceship
+class SimpleEnemyShip : public EnemyItem, public Spaceship
 {
 public:
 
-	EnemyShip();
-	EnemyShip(position & newPos);
-	EnemyShip(const int & xx, const int & yy);
-	virtual ~EnemyShip();
+	SimpleEnemyShip();
+	SimpleEnemyShip(position & newPos);
+	SimpleEnemyShip(const int & xx, const int & yy);
+	virtual ~SimpleEnemyShip();
 
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
@@ -31,7 +31,7 @@ public:
 	bool whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip);
 	bool shootIfShould(gameItemContainer * boardItems, long int ms);
 
-	GameItem * clone() { return new EnemyShip(*this); };
+	GameItem * clone() { return new SimpleEnemyShip(*this); };
 	Spaceship * getInstance() { return this; };
 	direction getAttackDirection() { return attackDir; };
 
@@ -54,4 +54,4 @@ private:
 	int betweenShotMeanTime;	//ms
 };
 
-#endif /* ENEMYSHIP_H_ */
+#endif /* SimpleEnemyShip_H_ */

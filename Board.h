@@ -13,7 +13,7 @@
 #include "NeutralItem.h"
 #include "Spaceship.h"
 #include "Stone.h"
-#include "EnemyShip.h"
+#include "SimpleEnemyShip.h"
 #include "MyShip.h"
 #include "MyBullet.h"
 #include "EnemyBullet.h"
@@ -26,17 +26,18 @@ class Board
 {
 public:
 	void init(WINDOW * fromGame);
-	void clear();
 	void drawFrame(void);
 	void drawItems(void);
 	void initialize(void);
-	void randomEnemy(double difficultyLevel);
 	void showItems(void);
-	void update(chrono::milliseconds & time);
+	bool collisionDetect(void);
+	void randomEnemy(double difficultyLevel);
+	bool update(chrono::milliseconds & time);
 	void keyHandle(const int & key);
 	void updateMovements(chrono::milliseconds & time);
-	void collisionDetect(void);
 	void insertEnemy(chrono::milliseconds & time);
+	void clear(void);
+	void showInfo(void);
 
 	Board();
 	Board(WINDOW * fromGame);

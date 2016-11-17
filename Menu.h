@@ -20,7 +20,7 @@ public:
 	Menu(Game & gra);
 	~Menu();
 
-	void start(void);
+	bool start(void);
 	void print_menu(WINDOW *menu_win, int highlight);
 
 private:

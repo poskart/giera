@@ -14,17 +14,14 @@ position Stone::pointsWhenDisappears[numberOfBodyPointsWhenDisappears] = { { 1, 
 
 Stone::Stone() : Stone::Stone({boardSizeX/2, minYofPoints(pointsOfBody, numberOfBodyPoints)})	{}
 
-Stone::Stone(position & newPos)
-{
-	coordinates = newPos;
-	movementSpeed = 6;
-}
+Stone::Stone(position & newPos) : Stone::Stone(newPos.x, newPos.y){}
 
 Stone::Stone(const int & xx, const int & yy)
 {
 	coordinates.x = xx;
 	coordinates.y = yy;
 	movementSpeed = 6;
+	firepower = 25;
 }
 
 Stone::~Stone(){}

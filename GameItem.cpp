@@ -14,6 +14,7 @@ GameItem::GameItem()
 	lifePercentage = 100;
 	movementSpeed = 1;
 	lastUpdateTime = 0;
+	firepower = 0;
 }
 
 GameItem::~GameItem()
@@ -31,9 +32,19 @@ void GameItem::setLife(int & percent)
 	lifePercentage = percent;
 }
 
+int GameItem::getLife(void)
+{
+	return lifePercentage;
+}
+
 bool GameItem::isAlive(void)
 {
-	return lifePercentage != 0;
+	return lifePercentage > 0;
+}
+
+int GameItem::getFirepower(void)
+{
+	return firepower;
 }
 
 position GameItem::getPosition(void)

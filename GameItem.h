@@ -22,7 +22,9 @@ public:
 
 	position getPosition(void);
 	void setLife(int & percent);
+	int getLife(void);
 	bool isAlive(void);
+	int getFirepower(void);
 	virtual GameItem * clone() = 0 ;
 	virtual position * getPointsOfBody(void) const = 0;
 	virtual int getNumberOfBodyPoints(void) const = 0;
@@ -42,6 +44,7 @@ protected:
 	position coordinates;
 	int lifePercentage;
 	int movementSpeed;
+	int firepower;
 	long int lastUpdateTime;
 	static WINDOW * win;
 

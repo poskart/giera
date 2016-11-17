@@ -17,11 +17,13 @@ public:
 	MyShip();
 	MyShip(position & newPos);
 	MyShip(const int & xx, const int & yy);
+	bool loseHealth(const int & health);
 	virtual ~MyShip();
 	GameItem * clone() { return new MyShip(*this); };
 	Spaceship * getInstance() { return this; };
 	direction getAttackDirection() { return attackDir; };
-
+	void AddPoints(int value);
+	int getScore(void);
 
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
@@ -34,6 +36,7 @@ public:
 protected:
 
 private:
+	int score;
 	const static short int numberOfBodyPoints = 3;
 
 	static position pointsOfBody[numberOfBodyPoints];

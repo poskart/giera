@@ -21,7 +21,7 @@ Menu::Menu(Game & gra)
 
 Menu::~Menu() {}
 
-void Menu::start(void)
+bool Menu::start(void)
 {
 	int highlight = 1;
 	int choice = 0;
@@ -60,7 +60,6 @@ void Menu::start(void)
 			choice = highlight;
 			break;
 		default:
-			mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c);
 			refresh();
 			break;
 		}
@@ -68,7 +67,6 @@ void Menu::start(void)
 		if (choice != 0)	/* User did a choice come out of the infinite loop */
 			break;
 	}
-	mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
 	clrtoeol();
 	clear();
 	refresh();
@@ -77,7 +75,7 @@ void Menu::start(void)
 	case 1:
 	{
 		this->servicedGame->playGame();
-		break;
+		return true;
 	}
 	case 2:
 		break;
@@ -88,7 +86,7 @@ void Menu::start(void)
 	case 5:
 		break;
 	}
-
+	return false;
 }
 
 void Menu::print_menu(WINDOW *menu_win, int highlight)

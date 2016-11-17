@@ -16,12 +16,14 @@ MyShip::MyShip() : MyShip::MyShip({ gameBoardSizeX / 2, gameBoardSizeY - 1 + min
 MyShip::MyShip(position & newPos)
 {
 	coordinates = newPos;
+	score = 0;
 }
 
 MyShip::MyShip(const int & xx, const int & yy)
 {
 	coordinates.x = xx;
 	coordinates.y = yy;
+	score = 0;
 }
 
 MyShip::~MyShip() {}
@@ -40,6 +42,16 @@ char MyShip::getMainCharacter(void) const
 	return mainCharacter;
 }
 
+bool MyShip::loseHealth(const int & health)
+{
+	if (this->isAlive())
+	{
+		int outcomeLife = getLife() - health;
+		setLife(outcomeLife);
+	}
+	return this->isAlive();
+}
+
 GameItem * MyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	return nullptr;
@@ -48,4 +60,14 @@ GameItem * MyShip::updateColision(gameItemContainer * boardItems, GameItem * myS
 bool MyShip::updatePosition(long int ms)
 {
 	return true;
+}
+
+void MyShip::AddPoints(int value)
+{
+	score += value;
+}
+
+int MyShip::getScore(void)
+{
+	return score;
 }

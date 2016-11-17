@@ -4,12 +4,12 @@ char EnemyBullet::mainCharacter = '!';
 
 EnemyBullet::EnemyBullet(void) : speed(1) 
 {
+	firepower = 50;
 	movementSpeed = 12;
 }
 
-EnemyBullet::EnemyBullet(const int & xx, const int & yy) : speed(1)
+EnemyBullet::EnemyBullet(const int & xx, const int & yy) : EnemyBullet::EnemyBullet()
 {
-	movementSpeed = 12;
 	coordinates.x = xx;
 	coordinates.y = yy;
 }

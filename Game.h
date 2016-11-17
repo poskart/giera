@@ -25,7 +25,7 @@ public:
 	
 private:
 	WINDOW * gameWindow;
-	Board plansza;
+	Board * plansza;
 	milliseconds timeCounter, beginTime;
 };
 
