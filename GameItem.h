@@ -13,8 +13,6 @@
 class GameItem
 {
 public:
-	
-
 	GameItem();
 	virtual ~GameItem();
 
@@ -25,7 +23,6 @@ public:
 	int getLife(void);
 	bool isAlive(void);
 	int getFirepower(void);
-	virtual GameItem * clone() = 0 ;
 	virtual position * getPointsOfBody(void) const = 0;
 	virtual int getNumberOfBodyPoints(void) const = 0;
 	virtual char getMainCharacter(void) const  = 0;

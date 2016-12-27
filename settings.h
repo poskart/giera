@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <windows.h>
 #include <algorithm>
 #include <chrono>
 #include <list>
@@ -15,13 +16,16 @@ using namespace std;
 
 class GameItem;
 
-//size of game boards
+// Size of game boards
 const int boardSizeX = 100;
 const int boardSizeY = 65;
 
-//The same as above + frame thickness
+// The same as above + frame thickness
 const int gameBoardSizeX = boardSizeX + 2;
 const int gameBoardSizeY = boardSizeY + 2;
+
+// Width of the score display
+const int scoreDisplaySize = 30;
 
 const int gameSlowness = 1000;	// =>  min movement update frequency = 1/gameSlowness, here: 1 update/s
 

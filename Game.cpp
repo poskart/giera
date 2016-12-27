@@ -2,7 +2,7 @@
 
 Game::Game()
 {
-	gameWindow = newwin(gameBoardSizeY, gameBoardSizeX+30, 0, 0);
+	gameWindow = newwin(gameBoardSizeY, gameBoardSizeX + scoreDisplaySize, 0, 0);
 	noecho();
 	cbreak();
 	// turn on keypad translation for terminal
@@ -32,12 +32,15 @@ void Game::playGame(void)
 	fflush(stdin);
 	while (1)
 	{
+		// Update time counter
 		timeCounter = duration_cast< milliseconds >(
 			system_clock::now().time_since_epoch()
 			) - beginTime;
 		
 		// no delay mode enabled
 		nodelay(gameWindow, true);
+
+		// Wait for key pressed
 		c = wgetch(gameWindow);
 		
 		// update ship behavior
@@ -47,17 +50,17 @@ void Game::playGame(void)
 		if (!(plansza->update(timeCounter)))
 			break;
 
+		// Update board view
+		wclear(gameWindow);
+		plansza->drawFrame();
+		plansza->drawItems();
+
 		if (c == 's')
 			plansza->showItems();
-
-		if (!(timeCounter.count() % 50))
-		{
-			wclear(gameWindow);
-			plansza->drawFrame();
-			plansza->drawItems();
-		}
 		if (c == 27)
 			break;
+
+		Sleep(20);
 	}
 	
 	mvwprintw(gameWindow, 18, 40, "KONIEC GRY...");

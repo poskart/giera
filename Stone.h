@@ -22,7 +22,6 @@ public:
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
-	GameItem * clone() { return new Stone(*this); };
 
 	bool updatePosition(long int ms);
 	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);

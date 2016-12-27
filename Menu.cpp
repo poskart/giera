@@ -31,8 +31,8 @@ bool Menu::start(void)
 	clear();
 	noecho();
 	cbreak();	/* Line buffering disabled. pass on everything */
-	startx = (80 - WIDTH) / 2;
-	starty = (24 - HEIGHT) / 2;
+	startx = (gameBoardSizeX + scoreDisplaySize - WIDTH) / 2;
+	starty = (gameBoardSizeY - HEIGHT) / 2;
 
 	menu_win = newwin(HEIGHT, WIDTH, starty, startx);
 	keypad(menu_win, TRUE);

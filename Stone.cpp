@@ -62,6 +62,10 @@ bool Stone::updatePosition(long int ms)
 	return true;
 }
 
+/*
+	Method updateColision(), checks whether Stone hit MyShip, and returns this pointer
+	if there was collision with MyShip, or nullptr if there was no collision.
+*/
 GameItem * Stone::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	//check all items in board for each of bullets
@@ -79,6 +83,10 @@ GameItem * Stone::updateColision(gameItemContainer * boardItems, GameItem * mySh
 	return nullptr;
 }
 
+/*
+	Method isStoneAtTheEndOfTheBoard() returns true if Stone reach end of the
+	game board (y), false otherwise.
+*/
 bool Stone::isStoneAtTheEndOfTheBoard(void) const
 {
 	return coordinates.y == (gameBoardSizeY - 2);

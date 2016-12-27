@@ -11,7 +11,6 @@ public:
 	MyBullet(const int & xx, const int & yy);
 	virtual ~MyBullet();
 
-	GameItem * clone() { return new MyBullet(*this); };
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;

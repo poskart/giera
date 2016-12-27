@@ -10,7 +10,6 @@ public:
 	Bullet(const int & xx, const int & yy);
 	virtual ~Bullet();
 
-	GameItem * clone() { return new Bullet(*this); };
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;

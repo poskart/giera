@@ -94,6 +94,11 @@ void Board::drawItems()
 	wrefresh(win);
 }
 
+/*
+	Function inserts random enemy based on given difficulty level.
+	The greater value of difficultyLevel, the greater likelihood is
+	that harder enemy is choosen.
+*/
 void Board::randomEnemy(double difficultyLevel)
 {
 	//get random x form range 0 - difficultyLevel;
@@ -121,7 +126,8 @@ void Board::randomEnemy(double difficultyLevel)
 
 	if (nowy != NULL)
 	{
-		// how new element look like? - must know it's size to compute rand. position
+		// We must know size of new enemy to prevent from placing it
+		// incorrectly, e.g in the board wall
 		int N = nowy->getNumberOfBodyPoints();
 		position * bodyPointsTable = nowy->getPointsOfBody();
 
@@ -150,11 +156,11 @@ void Board::showItems(void)
 			stones++;
 		else;
 	}
-	mvwprintw(win, 16, 40, "Policzono:");
-	mvwprintw(win, 17, 40, "statki wroga: %d", SimpleEnemyShips);
-	mvwprintw(win, 18, 40, "kamienie: %d", stones);
-	mvwprintw(win, 19, 40, "Poziom trudnosci: %lf", difficultyLevel);
-	mvwprintw(win, 20, 40, "Czas enemy insert: %d", insertNewEnemyMeanTime);
+	mvwprintw(win, 16, 40, "Counted objects:");
+	mvwprintw(win, 17, 40, "Enemy ships: %d", SimpleEnemyShips);
+	mvwprintw(win, 18, 40, "Stones: %d", stones);
+	mvwprintw(win, 19, 40, "Difficulty level: %lf", difficultyLevel);
+	mvwprintw(win, 20, 40, "Enemy insert mean time: %d", insertNewEnemyMeanTime);
 	wrefresh(win);
 	getch();
 }
@@ -223,7 +229,7 @@ void Board::keyHandle(const int & key)
 		break;
 	}
 	default:
-		refresh();
+		//refresh();
 		break;
 	}
 }
@@ -234,6 +240,7 @@ void Board::updateMovements(chrono::milliseconds & time)
 	gameItemIterator i = boardItems.begin();
 	if (i == boardItems.end())
 		return;
+	GameItem * itemToDelete;
 	while(i != boardItems.end())
 	{
 		if (!((*i)->updatePosition(time.count())))
@@ -241,13 +248,17 @@ void Board::updateMovements(chrono::milliseconds & time)
 			//if stone went to the end of the board
 			if(dynamic_cast<Stone *>(*i) != nullptr)
 			{
+				itemToDelete = (*i);
 				i = boardItems.erase(i);
+				delete itemToDelete;
 				continue;
 			}
 			//if bullet went to the end of the board
 			if (dynamic_cast<Bullet *>(*i) != nullptr)
 			{  
+				itemToDelete = (*i);
 				i = boardItems.erase(i);
+				delete itemToDelete;
 				continue;
 			}
 		}
@@ -269,6 +280,7 @@ bool Board::collisionDetect(void)
 	if (i == boardItems.end())
 		return false;
 	GameItem * tmpPtr = (*i);
+	GameItem * itemToDelete;
 	while( i != boardItems.end())
 	{
 		//If there sth hit sth
@@ -280,7 +292,9 @@ bool Board::collisionDetect(void)
 				//bullet hit myShip
 				if (! (myShip->loseHealth((*i)->getFirepower())))
 					return true;
+				itemToDelete = *i;
 				i = boardItems.erase(i);
+				delete itemToDelete;
 				continue;
 			}
 			
@@ -293,7 +307,9 @@ bool Board::collisionDetect(void)
 				}
 				else
 					;
+				itemToDelete = *i;
 				i = boardItems.erase(i);
+				delete itemToDelete;
 				continue;
 			}
 			else if (dynamic_cast<Stone *>(*i) != nullptr)
@@ -301,7 +317,9 @@ bool Board::collisionDetect(void)
 				//Stone hit myShip
 				if (!(myShip->loseHealth((*i)->getFirepower())))
 					return true;
+				itemToDelete = *i;
 				i = boardItems.erase(i);
+				delete itemToDelete;
 				continue;
 			}
 		}

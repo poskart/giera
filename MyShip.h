@@ -19,7 +19,6 @@ public:
 	MyShip(const int & xx, const int & yy);
 	bool loseHealth(const int & health);
 	virtual ~MyShip();
-	GameItem * clone() { return new MyShip(*this); };
 	Spaceship * getInstance() { return this; };
 	direction getAttackDirection() { return attackDir; };
 	void AddPoints(int value);
@@ -31,7 +30,6 @@ public:
 
 	bool updatePosition(long int ms);
 	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
-	bool whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip);
 
 protected:
 

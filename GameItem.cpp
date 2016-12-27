@@ -63,34 +63,44 @@ ostream & operator<< (ostream & os, const GameItem & gi)
 	return os;
 }
 
+/*
+	Method move() moves GameItem dx distance about dx and dy about dy
+	and returns true if item was moved in x or in y direction.
+*/
 bool GameItem::move(const int & dx, const int & dy)
 {
 	bool wasMoved = false;
-	GameItem *obstacle = clone();
 	position aux{ this->coordinates.x + dx, this->coordinates.y + dy };
-	obstacle->forcePosition(aux);
-	if (!obstacle->whetherCollideWithWallsX(*obstacle) && dx != 0)
+	this->forcePosition(aux);
+	if (!this->whetherCollideWithWallsX(*this) && dx != 0)
 	{
-		coordinates.x += dx;
 		wasMoved = true;
 	}
-	if (!obstacle->whetherCollideWithWallsY(*obstacle) && dy != 0)
+	else
+		this->coordinates.x -= dx;
+	if (!this->whetherCollideWithWallsY(*this) && dy != 0)
 	{
-		coordinates.y += dy;
 		wasMoved = true;
 	}
-	delete obstacle;
+	else
+		this->coordinates.y -= dy;
 
 	return wasMoved;
 }
 
+/*
+	Set coords as the new position of the object (after creation)
+*/
 bool GameItem::setPosition(position & coords)
 {
 	coordinates = coords;
 	return true;
 }
 
-
+/*
+	Method whetherCollideWithPosition() returns true if GameItem collides with
+	position potentialCollide, otherwise it returns false.
+*/
 bool GameItem::whetherCollideWithPosition(const position * potentialCollide)
 {
 	if ((*potentialCollide) == coordinates)
@@ -104,6 +114,10 @@ bool GameItem::whetherCollideWithPosition(const position * potentialCollide)
 	return false;
 }
 
+/*
+	Method whetherCollideWithWalls() returns true if GameItem collides with
+	any wall (left, right, bottom, upper).
+*/
 bool GameItem::whetherCollideWithWalls(const GameItem & jakis) const
 {
 	if (whetherCollideWithWallsX(jakis) && whetherCollideWithWallsY(jakis))
@@ -111,6 +125,10 @@ bool GameItem::whetherCollideWithWalls(const GameItem & jakis) const
 	return false;
 }
 
+/*
+	Method whetherCollideWithWallsX() returns true if GameItem collides with
+	wheter left or right wall
+*/
 bool GameItem::whetherCollideWithWallsX(const GameItem & jakis) const
 {
 	if (isXinsideBoard(jakis.coordinates.x + maxXofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
@@ -119,6 +137,10 @@ bool GameItem::whetherCollideWithWallsX(const GameItem & jakis) const
 	return true;
 }
 
+/*
+	Method whetherCollideWithWallsY() returns true if GameItem collides with
+	wheter upper or bottom wall
+*/
 bool GameItem::whetherCollideWithWallsY(const GameItem & jakis) const
 {
 	if (isYinsideBoard(jakis.coordinates.y + maxYofPoints(getPointsOfBody(), getNumberOfBodyPoints()))
@@ -127,9 +149,15 @@ bool GameItem::whetherCollideWithWallsY(const GameItem & jakis) const
 	return true;
 }
 
+/*
+	 Draw game item on the board depending on it's type.
+	 This method is generic.
+*/
 void GameItem::draw(ostream & where) const  
 {
+	// Take character from specified object and print middle part of it's body
 	mvwprintw(win, coordinates.y, coordinates.x, "%c", this->getMainCharacter());
+	// Get others points of object's body
 	position * pos = this->getPointsOfBody();
 	if (pos != nullptr)
 	{
@@ -141,16 +169,27 @@ void GameItem::draw(ostream & where) const
 	}
 }
 
+/*
+	Method updatePosition() updates position (coordinates) of GameItem
+	according to its type. This method should be specified for each of the 
+	inherited object.
+*/
 bool GameItem::updatePosition(long int ms)
 {
 	return false;
 }
 
+/*
+	Method updateColision(), checks if any collision with the other GameItens
+	occured. If so, it returns this, otherwise (it collision did not occured)
+	it returns false.
+*/
 GameItem * GameItem::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	return nullptr;
 }
 
+// Return true if given x position is included in the board
 bool isXinsideBoard(int x)
 {
 	if( x < (gameBoardSizeX -1) && x > 0)
@@ -158,6 +197,7 @@ bool isXinsideBoard(int x)
 	return false;
 }
 
+// Return true if given y position is included in the board
 bool isYinsideBoard(int y)
 {
 	if( y < (gameBoardSizeY - 1) && y > 0)
@@ -165,6 +205,7 @@ bool isYinsideBoard(int y)
 	return false;
 }
 
+// Return max x coordinate from given array of points (x, y)
 int maxXofPoints(position * array, const int & N)
 {
 	int maxX = 0;
@@ -174,6 +215,7 @@ int maxXofPoints(position * array, const int & N)
 	return maxX;
 }
 
+// Return max y coordinate from given array of points (x, y)
 int maxYofPoints(position * array, const int & N)
 {
 	int maxY = 0;
@@ -183,6 +225,7 @@ int maxYofPoints(position * array, const int & N)
 	return maxY;
 }
 
+// Return min x coordinate from given array of points (x, y)
 int minXofPoints(position * array, const int & N)
 {
 	int minX = 0;
@@ -192,6 +235,7 @@ int minXofPoints(position * array, const int & N)
 	return minX;
 }
 
+// Return min x coordinate from given array of points (x, y)
 int minYofPoints(position * array, const int & N)
 {
 	int minY = 0;

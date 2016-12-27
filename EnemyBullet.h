@@ -11,7 +11,6 @@ public:
 	EnemyBullet(const int & xx, const int & yy);
 	virtual ~EnemyBullet();
 
-	GameItem * clone() { return new EnemyBullet(*this); };
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;

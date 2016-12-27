@@ -28,10 +28,8 @@ public:
 	
 	//check whether bullets hits sth, if nyShip hit then return tru e
 	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
-	bool whetherBulletHit(gameItemContainer * boardItems, GameItem * myShip);
 	bool shootIfShould(gameItemContainer * boardItems, long int ms);
 
-	GameItem * clone() { return new SimpleEnemyShip(*this); };
 	Spaceship * getInstance() { return this; };
 	direction getAttackDirection() { return attackDir; };
 
