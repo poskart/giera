@@ -10,8 +10,8 @@
 
 #include "Game.h"
 
-const int WIDTH = 30;
-const int HEIGHT = 10;
+const int MENU_WIDTH = 30;
+const int MENU_HEIGHT = 12;
 
 class Menu
 {
@@ -21,7 +21,9 @@ public:
 	~Menu();
 
 	bool start(void);
-	void print_menu(WINDOW *menu_win, int highlight);
+	void printMenu(WINDOW *menu_win, int highlight);
+	bool printSaveMenu(void);
+	bool printLoadMenu(void);
 
 private:
 	WINDOW *menu_win;

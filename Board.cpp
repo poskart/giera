@@ -11,6 +11,8 @@ char Board::frameHorizontalLine[] = { 0 };
 
 Board::Board() 
 {
+	win = nullptr;
+	myShip = nullptr;
 	difficultyLevel = initialDifficultyLevel;
 	insertNewEnemyMeanTime = initialInsertNewEnemyMeanTime;
 	prevInsertTime = 1000;
@@ -56,18 +58,18 @@ void Board::drawFrame()
 	wrefresh(win);
 }
 
-void Board::initialize(void)
+void Board::initializeItems(void)
 {
 	myShip = new MyShip();
+
+	Stone * kamien = new Stone(45, 22);
+	boardItems.push_back(kamien);
 
 	SimpleEnemyShip * nowy = new SimpleEnemyShip(30, 15);
 	boardItems.push_back(nowy);
 
-	SimpleEnemyShip * nowy1 = new SimpleEnemyShip(60, 15);
-	boardItems.push_back(nowy1);
-
-	Stone * kamien = new Stone(45, 22);
-	boardItems.push_back(kamien);
+	nowy = new SimpleEnemyShip(60, 15);
+	boardItems.push_back(nowy);
 
 	randomEnemy(1.8);
 	randomEnemy(2.2);
@@ -170,12 +172,14 @@ bool Board::update(chrono::milliseconds & time)
 	bool ifEndOfTheGame = false;
 	updateMovements(time);
 	ifEndOfTheGame = collisionDetect();
-	showInfo();
 	insertEnemy(time);
+	// Check if it is time to update difficulty level & insertNewEnemyMeanTime
 	if (time.count() - incrementDifficultyPrevTime > incrementDifficultyMeanTime)
 	{
+		// Insert enemies more often
 		if(insertNewEnemyMeanTime > 500)
 			insertNewEnemyMeanTime--;
+		// Increment difficulty level
 		if(difficultyLevel < 3)
 			difficultyLevel += 0.002;
 		incrementDifficultyPrevTime = time.count();
@@ -272,7 +276,11 @@ void Board::updateMovements(chrono::milliseconds & time)
 	}
 }
 
-// return true if MyShip destroyed
+/*
+	Method collisionDetect() handles collisions of items with MyShip.
+	It updates state of MyShip. Returns true if MyShip was destroyed,
+	false otherwise.
+*/
 bool Board::collisionDetect(void)
 {
 	int tmp = 1;

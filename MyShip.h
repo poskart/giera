@@ -23,6 +23,7 @@ public:
 	direction getAttackDirection() { return attackDir; };
 	void AddPoints(int value);
 	int getScore(void);
+	int & getScoreRef(void);
 
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;

@@ -19,6 +19,10 @@ Spaceship::~Spaceship()
 	// TODO Auto-generated destructor stub
 }
 
+/*
+	Method shoot() initializes position of new bullet and includes
+	this new item in GameItem main container.
+*/
 template<typename T>
 void Spaceship::shoot(T * nowy, gameItemContainer * boardItems)
 {
@@ -41,5 +45,5 @@ void Spaceship::shoot(gameItemContainer * boardItems)
 void Spaceship::draw(ostream & where) const
 {
 	GameItem::draw(where);
-	wrefresh(win);
+	//wrefresh(win);
 }

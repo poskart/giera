@@ -20,15 +20,17 @@
 
 using namespace std;
 
+class Game;
 const char frameCharacter = '#';
 
 class Board
 {
+	friend class Game;
 public:
 	void init(WINDOW * fromGame);
 	void drawFrame(void);
 	void drawItems(void);
-	void initialize(void);
+	void initializeItems(void);
 	void showItems(void);
 	bool collisionDetect(void);
 	void randomEnemy(double difficultyLevel);

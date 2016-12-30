@@ -71,3 +71,8 @@ int MyShip::getScore(void)
 {
 	return score;
 }
+
+int & MyShip::getScoreRef(void)
+{
+	return score;
+}

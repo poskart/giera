@@ -31,14 +31,14 @@ bool Menu::start(void)
 	clear();
 	noecho();
 	cbreak();	/* Line buffering disabled. pass on everything */
-	startx = (gameBoardSizeX + scoreDisplaySize - WIDTH) / 2;
-	starty = (gameBoardSizeY - HEIGHT) / 2;
+	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
+	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
 
-	menu_win = newwin(HEIGHT, WIDTH, starty, startx);
+	menu_win = newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
 	keypad(menu_win, TRUE);
 	mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
 	refresh();
-	print_menu(menu_win, highlight);
+	printMenu(menu_win, highlight);
 	while (1)
 	{
 		c = wgetch(menu_win);
@@ -63,7 +63,7 @@ bool Menu::start(void)
 			refresh();
 			break;
 		}
-		print_menu(menu_win, highlight);
+		printMenu(menu_win, highlight);
 		if (choice != 0)	/* User did a choice come out of the infinite loop */
 			break;
 	}
@@ -73,23 +73,25 @@ bool Menu::start(void)
 	switch (choice)
 	{
 	case 1:
-	{
-		this->servicedGame->playGame();
+		this->servicedGame->playGame(true);
 		return true;
-	}
 	case 2:
-		break;
+		printSaveMenu();
+		return true;
 	case 3:
-		break;
+		if(printLoadMenu())
+			this->servicedGame->playGame(false);
+		return true;
 	case 4:
 		break;
 	case 5:
+		this->servicedGame->deleteBoard();
 		break;
 	}
 	return false;
 }
 
-void Menu::print_menu(WINDOW *menu_win, int highlight)
+void Menu::printMenu(WINDOW *menu_win, int highlight)
 {
 	int x, y, i;
 
@@ -99,7 +101,7 @@ void Menu::print_menu(WINDOW *menu_win, int highlight)
 	wrefresh(menu_win);
 	for (i = 0; i < n_choices; ++i)
 	{
-		if (highlight == i + 1) /* High light the present choice */
+		if (highlight == i + 1) /* Highlight the present choice */
 		{
 			wattron(menu_win, A_BOLD);
 			mvwprintw(menu_win, y, x, "%s", choices[i]);
@@ -110,4 +112,90 @@ void Menu::print_menu(WINDOW *menu_win, int highlight)
 		++y;
 	}
 	wrefresh(menu_win);
+}
+
+bool Menu::printSaveMenu()
+{
+	char fileName[80];
+	WINDOW * saveWin = nullptr;
+
+	initscr();
+	clear();
+	noecho();
+	cbreak();	/* Line buffering disabled. pass on everything */
+	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
+	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
+
+	saveWin = newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
+	keypad(saveWin, TRUE);
+	refresh();
+
+	box(saveWin, 0, 0);
+	wrefresh(saveWin);
+
+	mvwprintw(saveWin, 2, 2, "%s", "Insert file name:");
+	echo();
+	// get new file Name
+	mvwgetnstr(saveWin, 3, 2, fileName, 80);
+	noecho();
+	wrefresh(saveWin);
+
+	try 
+	{
+		this->servicedGame->saveGame(fileName);
+	}
+	catch (std::ofstream::failure e) 
+	{
+		std::cerr << "Exception opening/reading/closing file in save attempt";
+		getch();
+		return false;
+	}
+
+	mvwprintw(saveWin, 3, 2, "%s", "Game saved...");
+	wrefresh(saveWin);
+	getch();
+	return true;
+}
+
+bool Menu::printLoadMenu()
+{ 
+	char fileName[80];
+	WINDOW * saveWin = nullptr;
+
+	initscr();
+	clear();
+	noecho();
+	cbreak();	/* Line buffering disabled. pass on everything */
+	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
+	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
+
+	saveWin = newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
+	keypad(saveWin, TRUE);
+	refresh();
+
+	box(saveWin, 0, 0);
+	wrefresh(saveWin);
+
+	mvwprintw(saveWin, 2, 2, "%s", "Insert file name:");
+	echo();
+	// get new file Name
+	mvwgetnstr(saveWin, 3, 2, fileName, 80);
+	noecho();
+	wrefresh(saveWin);
+
+	try
+	{
+		this->servicedGame->loadGame(fileName);
+	}
+	catch (std::ifstream::failure e)
+	{
+		std::cerr << "Exception opening/reading/closing file in load attempt";
+		getch();
+		return false;
+	}
+
+	mvwprintw(saveWin, 3, 2, "%s", "Game loaded...");
+	wrefresh(saveWin);
+	getch();
+	return true;
 }

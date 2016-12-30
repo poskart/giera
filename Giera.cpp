@@ -18,9 +18,8 @@ int main()
 {
 	initscr();
 	noecho();
-	//	mvprintw(10, 20, "Cos napisane nizej i w prawo...");
 	Game gra;
-
+	//_CrtSetBreakAlloc(195);
 	Menu menu(gra);
 	while(menu.start());
 

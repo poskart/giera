@@ -51,4 +51,13 @@ typedef enum
 typedef std::list<GameItem *> gameItemContainer;
 typedef std::list<GameItem *>::iterator gameItemIterator;
 
+enum gameObjectTypes
+{
+	mybullet,
+	enemybullet,
+	stone,
+	simpleenemyship,
+	myship
+};
+
 #endif

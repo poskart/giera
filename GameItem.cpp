@@ -52,6 +52,24 @@ position GameItem::getPosition(void)
 	return coordinates;
 }
 
+GameItem::gameItemInfo GameItem::getItemParameters(void)
+{
+	gameItemInfo tmpStruct;
+	tmpStruct.info_coordinates = coordinates;
+	tmpStruct.info_firepower = firepower;
+	tmpStruct.info_lifePercentage = lifePercentage;
+	tmpStruct.info_movementSpeed = movementSpeed;
+	return tmpStruct;
+}
+
+void GameItem::setItemParameters(GameItem::gameItemInfo tmpStruct)
+{
+	coordinates = tmpStruct.info_coordinates;
+	firepower = tmpStruct.info_firepower;
+	lifePercentage = tmpStruct.info_lifePercentage;
+	movementSpeed = tmpStruct.info_movementSpeed;
+}
+
 void GameItem::forcePosition(position & nowa)
 {
 	coordinates = nowa;

@@ -7,9 +7,6 @@ Game::Game()
 	cbreak();
 	// turn on keypad translation for terminal
 	keypad(gameWindow, TRUE);
-	beginTime = duration_cast< milliseconds >(
-		system_clock::now().time_since_epoch()
-		);
 }
 
 Game::~Game()
@@ -17,13 +14,14 @@ Game::~Game()
 	// TODO Auto-generated destructor stub
 }
 
-void Game::playGame(void)
+void Game::playGame(bool newGame)
 {
-	plansza = new Board();
-	plansza->init(gameWindow);
-	plansza->initialize();
-	plansza->drawFrame();
-	plansza->drawItems();
+	if(newGame)
+		initialize();
+	// Save begin time
+	beginTime = duration_cast< milliseconds >(
+		system_clock::now().time_since_epoch()
+		);
 	// do not block keyboard for gameWindow - 
 	// read each of characters separately
 	wtimeout(gameWindow, 0);
@@ -54,6 +52,7 @@ void Game::playGame(void)
 		wclear(gameWindow);
 		plansza->drawFrame();
 		plansza->drawItems();
+		plansza->showInfo();
 
 		if (c == 's')
 			plansza->showItems();
@@ -62,19 +61,161 @@ void Game::playGame(void)
 
 		Sleep(20);
 	}
-	
-	mvwprintw(gameWindow, 18, 40, "KONIEC GRY...");
-	wrefresh(gameWindow);
-	delete plansza;
 	getch();
 }
 
-void Game::saveGame()
+void Game::saveGame(const char * fileName)
 {
+	ofstream fout;
+	/*
+		failbit - logical error on i/o operation
+		badbit - read/writing error on i/o operation
+	*/
+	fout.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+	try
+	{
+		fout.open(fileName, ios_base::out | ios_base::binary);
+	}
+	catch (std::ofstream::failure e)
+	{
+		throw e;
+	}
+	gameObjectTypes typeOfObject;
 
+	gameItemIterator tmpIter;
+	if (plansza != nullptr)
+	{
+		tmpIter = plansza->boardItems.begin();
+		for (; tmpIter != plansza->boardItems.end(); tmpIter++)
+		{
+			if (dynamic_cast<MyBullet *>(*tmpIter) != nullptr)
+				typeOfObject = mybullet;
+			else if (dynamic_cast<EnemyBullet *>(*tmpIter) != nullptr)
+				typeOfObject = enemybullet;
+			else if (dynamic_cast<SimpleEnemyShip *>(*tmpIter) != nullptr)
+				typeOfObject = simpleenemyship;
+			else if (dynamic_cast<Stone *>(*tmpIter) != nullptr)
+				typeOfObject = stone;
+
+			// Save object type & object itself
+			fout.write((char *)&typeOfObject, sizeof(gameObjectTypes));
+			GameItem::gameItemInfo tmpStruct = (*tmpIter)->getItemParameters();
+			fout.write((char *)(&tmpStruct), sizeof(tmpStruct));
+		}
+
+		// Save myShip type & myShip itself
+		typeOfObject = myship;
+		fout.write((char *)&typeOfObject, sizeof(gameObjectTypes));
+		GameItem::gameItemInfo tmpStruct = plansza->myShip->getItemParameters();
+		fout.write((char *)(&tmpStruct), sizeof(tmpStruct));
+
+		// Save score
+		int sc = plansza->myShip->getScore();
+		fout.write((char *)&sc, sizeof(int));
+		// Save difficulty level
+		double tmpParameter1 = plansza->difficultyLevel;
+		fout.write((char *)& tmpParameter1, sizeof(tmpParameter1));
+		// Save insertNewEnemyMeanTime
+		int tmpParameter2 = plansza->insertNewEnemyMeanTime;
+		fout.write((char *)& tmpParameter2, sizeof(tmpParameter2));
+	}
+
+	fout.close();
 }
 
-void Game::loadGame()
+void Game::loadGame(const char * fileName)
 {
+	ifstream fin;
+	/*
+	failbit - logical error on i/o operation
+	badbit - read/writing error on i/o operation
+	*/
+	fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		fin.open(fileName, ios_base::in | ios_base::binary);
+	}
+	catch (std::ifstream::failure e)
+	{
+		throw e;
+	}
 
+	if (plansza != nullptr)
+	{
+		deleteBoard();
+	}
+	plansza = new Board();
+	plansza->init(gameWindow);
+
+	gameObjectTypes typeOfObject = stone;
+	GameItem * itemToInsert = nullptr;
+	if (!(fin.eof()))
+	{
+		while (typeOfObject != myship && !(fin.eof()))
+		{
+			// Read type of the item
+			fin.read((char *)&typeOfObject, sizeof(typeOfObject));
+
+			if (typeOfObject == mybullet)
+				itemToInsert = new MyBullet();
+			else if (typeOfObject == enemybullet)
+				itemToInsert = new EnemyBullet();
+			else if (typeOfObject == simpleenemyship)
+				itemToInsert = new SimpleEnemyShip();
+			else if (typeOfObject == stone)
+				itemToInsert = new Stone();
+			else if (typeOfObject == myship)
+				itemToInsert = new MyShip();
+
+			GameItem::gameItemInfo tmpStruct;
+			// Read the item
+			fin.read((char *)(& tmpStruct), sizeof(tmpStruct));
+			// Set new item's parameters
+			itemToInsert->setItemParameters(tmpStruct);
+
+			// Insert new game item into GameItem container
+			if (typeOfObject == myship)
+				plansza->myShip = dynamic_cast<MyShip *>(itemToInsert);
+			else
+				plansza->boardItems.push_back(itemToInsert);
+		}
+		// Read score
+		fin.read((char *)&(plansza->myShip->getScoreRef()), sizeof(int));
+		// Read difficulty level
+		fin.read((char *)(&plansza->difficultyLevel), sizeof(double));
+		// Read insertNewEnemyMeanTime
+		fin.read((char *)(&plansza->insertNewEnemyMeanTime), sizeof(int));
+	}
+	fin.close();
 }
+
+void Game::deleteBoard()
+{
+	delete plansza;
+}
+
+void Game::initialize()
+{
+	plansza = new Board();//155, 
+	plansza->init(gameWindow);
+	plansza->initializeItems();
+	plansza->drawFrame();
+	plansza->drawItems();
+}
+
+//streamsize getSizeFromEnumType(gameObjectTypes typeOfObj)
+//{
+//	switch (typeOfObj)
+//	{
+//	case mybullet:
+//		return sizeof(MyBullet);
+//	case enemybullet:
+//		return sizeof(EnemyBullet);
+//	case stone:
+//		return sizeof(Stone);
+//	case simpleenemyship:
+//		return sizeof(SimpleEnemyShip);
+//	case myship:
+//		return sizeof(MyShip);
+//	}
+//}

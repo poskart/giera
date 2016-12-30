@@ -10,6 +10,7 @@
 
 #include "Board.h"
 #include "Stone.h"
+#include <fstream>
 
 using namespace chrono;
 
@@ -19,14 +20,17 @@ public:
 	Game();
 	virtual ~Game();
 
-	void saveGame();
-	void playGame();
-	void loadGame();
-	
+	void saveGame(const char * fileName);
+	void loadGame(const char * fileName);
+	void playGame(bool newGame);
+	void deleteBoard();
+	void initialize();
 private:
 	WINDOW * gameWindow;
 	Board * plansza;
 	milliseconds timeCounter, beginTime;
 };
+
+streamsize getSizeFromEnumType(gameObjectTypes typeOfObj);
 
 #endif /* GAME_H_ */

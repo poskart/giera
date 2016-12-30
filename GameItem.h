@@ -13,16 +13,25 @@
 class GameItem
 {
 public:
+	struct gameItemInfo
+	{
+		position info_coordinates;
+		int info_lifePercentage;
+		int info_movementSpeed;
+		int info_firepower;
+	};
 	GameItem();
 	virtual ~GameItem();
 
 	static void setCommonWindow(WINDOW * fromGame);
 
-	position getPosition(void);
 	void setLife(int & percent);
 	int getLife(void);
 	bool isAlive(void);
 	int getFirepower(void);
+	position getPosition(void);
+	gameItemInfo getItemParameters(void);
+	void setItemParameters(gameItemInfo);
 	virtual position * getPointsOfBody(void) const = 0;
 	virtual int getNumberOfBodyPoints(void) const = 0;
 	virtual char getMainCharacter(void) const  = 0;
