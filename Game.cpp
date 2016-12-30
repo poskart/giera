@@ -7,6 +7,11 @@ Game::Game()
 	cbreak();
 	// turn on keypad translation for terminal
 	keypad(gameWindow, TRUE);
+
+	// Save begin time
+	beginTime = duration_cast< milliseconds >(
+		system_clock::now().time_since_epoch()
+		);
 }
 
 Game::~Game()
@@ -18,10 +23,6 @@ void Game::playGame(bool newGame)
 {
 	if(newGame)
 		initialize();
-	// Save begin time
-	beginTime = duration_cast< milliseconds >(
-		system_clock::now().time_since_epoch()
-		);
 	// do not block keyboard for gameWindow - 
 	// read each of characters separately
 	wtimeout(gameWindow, 0);
@@ -203,6 +204,18 @@ void Game::initialize()
 	plansza->drawItems();
 }
 
+bool Game::isBoardInitialized(void)
+{
+	return plansza != nullptr;
+}
+
+void Game::updateGameTime(void)
+{
+	// Save begin time
+	beginTime = duration_cast< milliseconds >(
+		system_clock::now().time_since_epoch()
+		);
+}
 //streamsize getSizeFromEnumType(gameObjectTypes typeOfObj)
 //{
 //	switch (typeOfObj)

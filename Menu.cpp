@@ -7,7 +7,7 @@ char *choices[] = {
 	"Play the game",
 	"Save game",
 	"Load game",
-	"Choice 4",
+	"Return to game",
 	"Exit",
 };
 int n_choices = sizeof(choices) / sizeof(char *);
@@ -73,19 +73,26 @@ bool Menu::start(void)
 	switch (choice)
 	{
 	case 1:
-		this->servicedGame->playGame(true);
+		servicedGame->playGame(true);
 		return true;
 	case 2:
 		printSaveMenu();
 		return true;
 	case 3:
-		if(printLoadMenu())
-			this->servicedGame->playGame(false);
+		if (printLoadMenu())
+		{
+			servicedGame->updateGameTime();
+			servicedGame->playGame(false);
+		}
 		return true;
 	case 4:
-		break;
+		if (servicedGame->isBoardInitialized())
+		{
+			servicedGame->playGame(false);
+		}
+		return true;
 	case 5:
-		this->servicedGame->deleteBoard();
+		servicedGame->deleteBoard();
 		break;
 	}
 	return false;

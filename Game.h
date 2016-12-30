@@ -25,6 +25,8 @@ public:
 	void playGame(bool newGame);
 	void deleteBoard();
 	void initialize();
+	bool isBoardInitialized(void);
+	void updateGameTime(void);
 private:
 	WINDOW * gameWindow;
 	Board * plansza;
