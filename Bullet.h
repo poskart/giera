@@ -10,6 +10,7 @@ public:
 	Bullet(const int & xx, const int & yy);
 	virtual ~Bullet();
 
+	int getPointsForDestroy(void) { return 0; }
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;

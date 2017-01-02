@@ -9,6 +9,7 @@
 
 char SimpleEnemyShip::mainCharacter = 'x';
 position SimpleEnemyShip::pointsOfBody[numberOfBodyPoints] = {{0, 1}, {1, 0}, {-1, 0}};
+int SimpleEnemyShip::pointsForDestroy = 200;
 
 int SimpleEnemyShip::maxYfrontLinePosition = boardSizeY / 2;
 
@@ -30,6 +31,10 @@ SimpleEnemyShip::SimpleEnemyShip(const int & xx, const int & yy)
 SimpleEnemyShip::~SimpleEnemyShip(){
 }
 
+int SimpleEnemyShip::getPointsForDestroy(void)
+{
+	return pointsForDestroy;
+}
 
 position * SimpleEnemyShip::getPointsOfBody(void) const
 {
@@ -50,7 +55,7 @@ bool SimpleEnemyShip::updatePosition(long int ms)
 	if ((ms - lastUpdateTime) > (gameSlowness / movementSpeed))
 	{
 		int targetDx = 0, targetDy = 0;
-		double kp = 4 / gameBoardSizeX;
+		double  kp = 4 / gameBoardSizeX;
 		int xPositionError = targetPos.x - this->coordinates.x;
 		if (xPositionError < 0)
 			targetDx = (int)(kp*xPositionError) - 1;
@@ -76,7 +81,7 @@ GameItem * SimpleEnemyShip::updateColision(gameItemContainer * boardItems, GameI
 
 bool SimpleEnemyShip::shootIfShould(gameItemContainer * boardItems, long int ms)
 {
-	int shootTimePeriod = (rand() % (2 * betweenShotMeanTime) + 1000);
+	int shootTimePeriod = (rand() % (2 * betweenShotMeanTime) + 500);
 	if (shootEnabled &&
 		((ms - previousShootTime) > shootTimePeriod))
 	{

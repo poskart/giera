@@ -53,7 +53,7 @@ void Game::playGame(bool newGame)
 		wclear(gameWindow);
 		plansza->drawFrame();
 		plansza->drawItems();
-		plansza->showInfo();
+		plansza->showInfo(timeCounter.count());
 
 		if (c == 's')
 			plansza->showItems();
@@ -192,7 +192,11 @@ void Game::loadGame(const char * fileName)
 
 void Game::deleteBoard()
 {
-	delete plansza;
+	if (plansza != nullptr)
+	{
+		plansza->clear();
+		delete plansza;
+	}
 }
 
 void Game::initialize()
@@ -216,19 +220,3 @@ void Game::updateGameTime(void)
 		system_clock::now().time_since_epoch()
 		);
 }
-//streamsize getSizeFromEnumType(gameObjectTypes typeOfObj)
-//{
-//	switch (typeOfObj)
-//	{
-//	case mybullet:
-//		return sizeof(MyBullet);
-//	case enemybullet:
-//		return sizeof(EnemyBullet);
-//	case stone:
-//		return sizeof(Stone);
-//	case simpleenemyship:
-//		return sizeof(SimpleEnemyShip);
-//	case myship:
-//		return sizeof(MyShip);
-//	}
-//}

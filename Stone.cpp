@@ -8,7 +8,7 @@
 #include "Stone.h"
 
 char Stone::mainCharacter = '@';
-
+int Stone::pointsForDestroy = 50;
 position Stone::pointsOfBody[numberOfBodyPoints] = { {0, 1}, {1, 0}, {-1, 0}, {1, 1}, {-1, 1} };
 position Stone::pointsWhenDisappears[numberOfBodyPointsWhenDisappears] = { { 1, 0 }, { -1, 0 } };
 
@@ -25,6 +25,11 @@ Stone::Stone(const int & xx, const int & yy)
 }
 
 Stone::~Stone(){}
+
+int Stone::getPointsForDestroy(void)
+{
+	return pointsForDestroy;
+}
 
 position * Stone::getPointsOfBody(void) const
 {
@@ -68,17 +73,17 @@ bool Stone::updatePosition(long int ms)
 */
 GameItem * Stone::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
-	//check all items in board for each of bullets
+	// Check if this Stone hit myShip
 	position * middlePos = &(myShip->getPosition());
 	if (this->whetherCollideWithPosition(middlePos))
-		return this;
+		return myShip;
 	position * tmpPos = (myShip->getPointsOfBody());
 	int numberOfPoints = myShip->getNumberOfBodyPoints();
 	for (int i = 0; i < numberOfPoints; i++, tmpPos++)
 	{
 		position tmp = (*tmpPos) + (*middlePos);
 		if (this->whetherCollideWithPosition(&tmp))
-			return this;
+			return myShip;
 	}
 	return nullptr;
 }

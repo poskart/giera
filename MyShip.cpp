@@ -17,6 +17,7 @@ MyShip::MyShip(position & newPos)
 {
 	coordinates = newPos;
 	score = 0;
+	gMissilePtr = nullptr;
 }
 
 MyShip::MyShip(const int & xx, const int & yy)
@@ -24,9 +25,15 @@ MyShip::MyShip(const int & xx, const int & yy)
 	coordinates.x = xx;
 	coordinates.y = yy;
 	score = 0;
+	gMissilePtr = nullptr;
 }
 
 MyShip::~MyShip() {}
+
+int MyShip::getPointsForDestroy(void)
+{
+	return 0;
+}
 
 position * MyShip::getPointsOfBody(void) const
 {
@@ -50,6 +57,16 @@ bool MyShip::loseHealth(const int & health)
 		setLife(outcomeLife);
 	}
 	return this->isAlive();
+}
+
+GuidedMissile * MyShip::getGuidedMissilePtr(void)
+{
+	return gMissilePtr;
+}
+
+void MyShip::setGuidedMissilePtr(GuidedMissile * newMissile)
+{
+	gMissilePtr = newMissile;
 }
 
 GameItem * MyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)

@@ -17,6 +17,7 @@
 #include "MyShip.h"
 #include "MyBullet.h"
 #include "EnemyBullet.h"
+#include "GuidedMissile.h"
 
 using namespace std;
 
@@ -36,10 +37,10 @@ public:
 	void randomEnemy(double difficultyLevel);
 	bool update(chrono::milliseconds & time);
 	void keyHandle(const int & key);
-	void updateMovements(chrono::milliseconds & time);
+	void updateMovementsAndAttack(chrono::milliseconds & time);
 	void insertEnemy(chrono::milliseconds & time);
 	void clear(void);
-	void showInfo(void);
+	void showInfo(int gameTimeMs);
 
 	Board();
 	Board(WINDOW * fromGame);

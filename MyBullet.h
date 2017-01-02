@@ -11,6 +11,7 @@ public:
 	MyBullet(const int & xx, const int & yy);
 	virtual ~MyBullet();
 
+	int getPointsForDestroy(void);
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
@@ -22,7 +23,6 @@ protected:
 
 private:
 	static char mainCharacter;
-
 };
 
 

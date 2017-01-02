@@ -37,6 +37,9 @@ void Spaceship::shoot(T * nowy, gameItemContainer * boardItems)
 	boardItems->push_back(nowy);
 }
 
+/*
+	Shoot with the default weapon
+*/
 void Spaceship::shoot(gameItemContainer * boardItems)
 {
 	Spaceship::shoot(new Bullet(), boardItems );
@@ -45,5 +48,4 @@ void Spaceship::shoot(gameItemContainer * boardItems)
 void Spaceship::draw(ostream & where) const
 {
 	GameItem::draw(where);
-	//wrefresh(win);
 }

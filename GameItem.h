@@ -32,6 +32,7 @@ public:
 	position getPosition(void);
 	gameItemInfo getItemParameters(void);
 	void setItemParameters(gameItemInfo);
+	virtual int getPointsForDestroy(void) = 0;
 	virtual position * getPointsOfBody(void) const = 0;
 	virtual int getNumberOfBodyPoints(void) const = 0;
 	virtual char getMainCharacter(void) const  = 0;

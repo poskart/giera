@@ -16,6 +16,11 @@ MyBullet::MyBullet(const int & xx, const int & yy) : speed(1)
 
 MyBullet::~MyBullet() {}
 
+int MyBullet::getPointsForDestroy(void)
+{
+	return 0;
+}
+
 position * MyBullet::getPointsOfBody(void) const
 {
 	return nullptr;
@@ -50,7 +55,6 @@ bool MyBullet::updatePosition(long int ms)
 */
 GameItem * MyBullet::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
-	GameItem * itemToRemove;
 	gameItemIterator itemIt = boardItems->begin();
 	if (itemIt == boardItems->end())
 		return nullptr;
@@ -61,12 +65,7 @@ GameItem * MyBullet::updateColision(gameItemContainer * boardItems, GameItem * m
 			continue;
 		//check if bullet hit in the middle of the item
 		if ((*itemIt)->whetherCollideWithPosition(&((this)->getPosition())))
-		{	
-			itemToRemove = *itemIt;
-			boardItems->erase(itemIt);
-			delete itemToRemove;
-			return this;
-		}
+			return *itemIt;
 	}	
 	return nullptr;
 }

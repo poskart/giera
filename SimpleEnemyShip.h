@@ -21,6 +21,7 @@ public:
 	SimpleEnemyShip(const int & xx, const int & yy);
 	virtual ~SimpleEnemyShip();
 
+	int getPointsForDestroy(void);
 	position * getPointsOfBody(void) const;
 	int getNumberOfBodyPoints(void) const;
 	char getMainCharacter(void) const;
@@ -46,6 +47,7 @@ private:
 	 */
 	static position pointsOfBody[numberOfBodyPoints];
 	static char mainCharacter;
+	static int pointsForDestroy;
 
 	static int maxYfrontLinePosition;
 	long int previousShootTime;

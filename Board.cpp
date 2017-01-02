@@ -170,8 +170,11 @@ void Board::showItems(void)
 bool Board::update(chrono::milliseconds & time)
 {
 	bool ifEndOfTheGame = false;
-	updateMovements(time);
+	// Update item's movements & attack
+	updateMovementsAndAttack(time);
+	// Update item's collisions & check if myShip not destroyed
 	ifEndOfTheGame = collisionDetect();
+	// Insert enemy if it's time
 	insertEnemy(time);
 	// Check if it is time to update difficulty level & insertNewEnemyMeanTime
 	if (time.count() - incrementDifficultyPrevTime > incrementDifficultyMeanTime)
@@ -232,14 +235,45 @@ void Board::keyHandle(const int & key)
 		myShip->shoot(bul, &boardItems);
 		break;
 	}
+	case 'g':
+	{
+		// If guided missile does not exist
+		if (myShip->getGuidedMissilePtr() == nullptr)
+		{
+			position pos = myShip->getPosition();
+			Bullet * bul = new GuidedMissile(pos.x, pos.y);
+			myShip->shoot(bul, &boardItems);
+			myShip->setGuidedMissilePtr(dynamic_cast<GuidedMissile *>(bul));
+		}
+		break;
+	}
+	case 'a':	// Move guided missile to the left (if exists)
+		if (myShip->getGuidedMissilePtr() != nullptr)
+		{
+			myShip->getGuidedMissilePtr()->move(-1, 0);
+		}
+		break;
+	case 'd':	// Move guided missile to the right (if exists)
+		if (myShip->getGuidedMissilePtr() != nullptr)
+		{
+			myShip->getGuidedMissilePtr()->move(1, 0);
+		}
+		break;
 	default:
 		//refresh();
 		break;
 	}
 }
 
-void Board::updateMovements(chrono::milliseconds & time)
+/*
+	Method updateMovementsAndAttack(time) updates position of each of the
+	item on the board depending on current time and also trigger enemies 
+	attack. Item can be moved by (x, y) or deleted if it's position cannot
+	be updated (e.g. went to the end of the board).
+*/
+void Board::updateMovementsAndAttack(chrono::milliseconds & time)
 {	
+	// Update target for every enemy item (target = myShip)
 	EnemyItem::getTargetPosition(myShip);
 	gameItemIterator i = boardItems.begin();
 	if (i == boardItems.end())
@@ -260,6 +294,11 @@ void Board::updateMovements(chrono::milliseconds & time)
 			//if bullet went to the end of the board
 			if (dynamic_cast<Bullet *>(*i) != nullptr)
 			{  
+				// If it was gMissile - delete myShip pointer to gMissile
+				if (dynamic_cast<GuidedMissile *>(*i) != nullptr)
+				{
+					myShip->setGuidedMissilePtr(nullptr);
+				}
 				itemToDelete = (*i);
 				i = boardItems.erase(i);
 				delete itemToDelete;
@@ -283,19 +322,18 @@ void Board::updateMovements(chrono::milliseconds & time)
 */
 bool Board::collisionDetect(void)
 {
-	int tmp = 1;
 	gameItemIterator i = boardItems.begin();
 	if (i == boardItems.end())
 		return false;
-	GameItem * tmpPtr = (*i);
 	GameItem * itemToDelete;
+	GameItem * itemHitByI;
 	while( i != boardItems.end())
 	{
-		//If there sth hit sth
-		if ((tmpPtr = (*i)->updateColision(&boardItems, myShip)) != nullptr)
+		//If there i-th item hit sth
+		if ((itemHitByI = (*i)->updateColision(&boardItems, myShip)) != nullptr)
 		{
 			//if myShip was hit by Bullet
-			if (tmpPtr == myShip)
+			if (itemHitByI == myShip)
 			{
 				//bullet hit myShip
 				if (! (myShip->loseHealth((*i)->getFirepower())))
@@ -306,20 +344,36 @@ bool Board::collisionDetect(void)
 				continue;
 			}
 			
-			(*i) = tmpPtr;
 			if (dynamic_cast<Bullet *>(*i) != nullptr)
 			{
+				// If myBullet hit sth
 				if (dynamic_cast<MyBullet *>(*i) != nullptr)
 				{
-					myShip->AddPoints(100);
+					myShip->AddPoints(itemHitByI->getPointsForDestroy());
+					// If it was gMissile - delete myShip pointer to gMissile
+					if (dynamic_cast<GuidedMissile *>(*i) != nullptr)
+					{
+						myShip->setGuidedMissilePtr(nullptr);
+					}
 				}
-				else
-					;
+				// if (EnemyBullet) hit MyBullet
+				else if (dynamic_cast<MyBullet *>(itemHitByI) != nullptr)
+				{
+					myShip->AddPoints((*i)->getPointsForDestroy());
+					// If it was gMissile - delete myShip pointer to gMissile
+					if (dynamic_cast<GuidedMissile *>(itemHitByI) != nullptr)
+					{
+						myShip->setGuidedMissilePtr(nullptr);
+					}
+				}
+				boardItems.remove(itemHitByI);
+				delete itemHitByI;
 				itemToDelete = *i;
 				i = boardItems.erase(i);
 				delete itemToDelete;
 				continue;
 			}
+			// Stone hit sth (myShip)
 			else if (dynamic_cast<Stone *>(*i) != nullptr)
 			{
 				//Stone hit myShip
@@ -331,12 +385,16 @@ bool Board::collisionDetect(void)
 				continue;
 			}
 		}
-		tmp++;
 		i++;
 	}
 	return false;
 }
 
+/*
+	insertEnemy(time) method inserts an enemy item to the board
+	items container, when it's time. Also updates newInsert time,
+	which is random value from the given range of time.
+*/
 void Board::insertEnemy(chrono::milliseconds & time)
 {
 	if (time.count() - prevInsertTime > newInsertTime)
@@ -347,15 +405,28 @@ void Board::insertEnemy(chrono::milliseconds & time)
 	}
 }
 
+/*
+	Method clear() clears every item from gameItemContainer & 
+	makes it empty.
+*/
 void Board::clear(void)
 {
+	gameItemIterator i = boardItems.begin();
+	while(i != boardItems.end())
+	{
+		delete *(i++);
+	}
 	boardItems.clear();
 }
 
-void Board::showInfo(void)
+/*
+	Method showInfo(time) shows info about game time, health & score.
+*/
+void Board::showInfo(int gameTimeMs)
 {
-	mvwprintw(win, 2, boardSizeX + 5, "Pozostalo zycia: %d%%", myShip->getLife());
-	mvwprintw(win, 4, boardSizeX + 5, "Punkty: %d", myShip->getScore());
+	mvwprintw(win, 2, boardSizeX + 5, "Czas gry: %d", gameTimeMs/1000);
+	mvwprintw(win, 5, boardSizeX + 5, "Pozostalo zycia: %d%%", myShip->getLife());
+	mvwprintw(win, 7, boardSizeX + 5, "Punkty: %d", myShip->getScore());
 	wrefresh(win);
 }
 

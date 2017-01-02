@@ -1,6 +1,7 @@
 #include "EnemyBullet.h"
 
 char EnemyBullet::mainCharacter = '!';
+int EnemyBullet::pointsForDestroy = 40;
 
 EnemyBullet::EnemyBullet(void) : speed(1) 
 {
@@ -15,6 +16,11 @@ EnemyBullet::EnemyBullet(const int & xx, const int & yy) : EnemyBullet::EnemyBul
 }
 
 EnemyBullet::~EnemyBullet() {}
+
+int EnemyBullet::getPointsForDestroy(void)
+{
+	return pointsForDestroy;
+}
 
 position * EnemyBullet::getPointsOfBody(void) const
 {
@@ -55,9 +61,6 @@ GameItem * EnemyBullet::updateColision(gameItemContainer * boardItems, GameItem 
 	gameItemIterator itemIt = boardItems->begin();
 	if (itemIt == boardItems->end())
 		return nullptr;
-
-	// Save pointer to item I hit on
-	GameItem * itemToRemove;
 	
 	for (; itemIt != boardItems->end(); itemIt++)
 	{
@@ -65,15 +68,9 @@ GameItem * EnemyBullet::updateColision(gameItemContainer * boardItems, GameItem 
 		if ((*itemIt) == this)
 			continue;
 		// If bullet hit in the middle of item & it is not enemyItem
-		if (	((*itemIt)->whetherCollideWithPosition(&((this)->getPosition())))	
-			&&	(dynamic_cast<EnemyItem *>(*itemIt) == nullptr))
-		{
-			itemToRemove = *itemIt;
-			// Remove item wich I hit on
-			boardItems->erase(itemIt);
-			delete itemToRemove;
-			return this;
-		}
+		if (((*itemIt)->whetherCollideWithPosition(&((this)->getPosition())))
+			&& (dynamic_cast<EnemyItem *>(*itemIt) == nullptr))
+			return *itemIt;
 	}
 	if (myShip->whetherCollideWithPosition(&((this)->getPosition())))
 		return myShip;
