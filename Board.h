@@ -18,6 +18,7 @@
 #include "MyBullet.h"
 #include "EnemyBullet.h"
 #include "GuidedMissile.h"
+#include "TripleMissile.h"
 
 using namespace std;
 

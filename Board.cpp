@@ -247,6 +247,18 @@ void Board::keyHandle(const int & key)
 		}
 		break;
 	}
+	case 't':
+	{
+		position pos = myShip->getPosition();
+		TripleMissile * bul = nullptr;
+		for (int i = -1; i < 2; i++)
+		{
+			bul = new TripleMissile(pos.x, pos.y);
+			bul->setHorizontalSpeed(i*4);
+			myShip->shoot(dynamic_cast<Bullet *>(bul), &boardItems);
+		}
+		break;
+	}
 	case 'a':	// Move guided missile to the left (if exists)
 		if (myShip->getGuidedMissilePtr() != nullptr)
 		{
