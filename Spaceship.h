@@ -24,6 +24,7 @@ public:
 	virtual direction getAttackDirection() = 0;
 	template<typename T>
 	void shoot(T * nowy, gameItemContainer * boardItems);
+	void shoot(EnemyItem * nowy, gameItemContainer * boardItems, position pos);
 	void shoot(gameItemContainer * boardItems);
 
 protected:

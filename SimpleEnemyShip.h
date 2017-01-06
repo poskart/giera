@@ -27,18 +27,19 @@ public:
 	char getMainCharacter(void) const;
 	bool updatePosition(long int ms);
 	
-	//check whether bullets hits sth, if nyShip hit then return tru e
+	//check whether bullets hits sth, if myShip hits then returns true
 	GameItem * updateColision(gameItemContainer * boardItems, GameItem * myShip);
-	bool shootIfShould(gameItemContainer * boardItems, long int ms);
+	virtual bool shootIfShould(gameItemContainer * boardItems, long int ms);
+	virtual bool shootingEnableWhenEnemyInRange(int positionError);
 
 	Spaceship * getInstance() { return this; };
 	direction getAttackDirection() { return attackDir; };
 
 protected:
-	
-	//target Y position of spaceship
-	int targetSelfLocatePositionY;
-
+	int maxShootingRange;
+	int targetSelfLocatePositionY;	// Target y position for enemy spaceship
+	long int previousShootTime;
+	int betweenShotMeanTime;		//ms
 private:
 	const static short int numberOfBodyPoints = 3;
 	/**
@@ -50,8 +51,6 @@ private:
 	static int pointsForDestroy;
 
 	static int maxYfrontLinePosition;
-	long int previousShootTime;
-	int betweenShotMeanTime;	//ms
 };
 
 #endif /* SimpleEnemyShip_H_ */

@@ -22,36 +22,77 @@ GameItem::~GameItem()
 	// TODO Auto-generated destructor stub
 }
 
+/*
+	Method setCommonWindow(WINDOW * fromGame) assigns current 
+	window pointer to win attribute.
+*/
 void GameItem::setCommonWindow(WINDOW * fromGame)
 {
 	GameItem::win = fromGame;
 }
 
+/*
+	Method setLife(int & percent) sets new health value to
+	lifePercentage attribute.
+*/
 void GameItem::setLife(int & percent)
 {
 	lifePercentage = percent;
 }
 
+/*
+	Method getLife(void) gets current health value from
+	lifePercentage attribute.
+*/
 int GameItem::getLife(void)
 {
 	return lifePercentage;
 }
 
+/*
+	Method isAlive(void) returns true when item has some helth, 
+	false otherwise.
+*/
 bool GameItem::isAlive(void)
 {
 	return lifePercentage > 0;
 }
 
+/*
+	Method loseHealth(const int & health) substracts given health value
+	from current item helth and returns true is item is alive or false otherwise.
+*/
+bool GameItem::loseHealth(const int & health)
+{
+	if (isAlive())
+	{
+		int outcomeLife = getLife() - health;
+		setLife(outcomeLife);
+	}
+	return isAlive();
+}
+
+/*
+	Method getFirepower(void) return item's firepower.
+*/
 int GameItem::getFirepower(void)
 {
 	return firepower;
 }
 
+/*
+	Return item's current position
+*/
 position GameItem::getPosition(void)
 {
 	return coordinates;
 }
 
+/*
+	Method getItemParameters(void) returns structure gameItemInfo
+	with all parameters of GameItem which are necessary to save
+	object state to file.
+*/
 GameItem::gameItemInfo GameItem::getItemParameters(void)
 {
 	gameItemInfo tmpStruct;
@@ -62,6 +103,11 @@ GameItem::gameItemInfo GameItem::getItemParameters(void)
 	return tmpStruct;
 }
 
+/*
+	Method setItemParameters(GameItem::gameItemInfo tmpStruct) sets 
+	item's state parameters based on structure gameItemInfo which is 
+	read from file.
+*/
 void GameItem::setItemParameters(GameItem::gameItemInfo tmpStruct)
 {
 	coordinates = tmpStruct.info_coordinates;
@@ -70,11 +116,19 @@ void GameItem::setItemParameters(GameItem::gameItemInfo tmpStruct)
 	movementSpeed = tmpStruct.info_movementSpeed;
 }
 
+/*
+	Method forcePosition(position & nowa) sets new position for GameItem, 
+	without checking if it is correct (in board range).
+*/
 void GameItem::forcePosition(position & nowa)
 {
 	coordinates = nowa;
 }
 
+/*
+	operator<< (ostream & os, const GameItem & gi) is used to draw item
+	graphical representation on the board, depending on it's type.
+*/
 ostream & operator<< (ostream & os, const GameItem & gi)
 {
 	gi.draw(os);
@@ -83,7 +137,8 @@ ostream & operator<< (ostream & os, const GameItem & gi)
 
 /*
 	Method move() moves GameItem dx distance about dx and dy about dy
-	and returns true if item was moved in x or in y direction.
+	if dx & dy are correct (in board range)	and returns true if item 
+	was moved in x or in y direction.
 */
 bool GameItem::move(const int & dx, const int & dy)
 {
@@ -198,9 +253,9 @@ bool GameItem::updatePosition(long int ms)
 }
 
 /*
-	Method updateColision(), checks if any collision with the other GameItens
-	occured. If so, it returns this, otherwise (it collision did not occured)
-	it returns false.
+	Method updateColision(), checks if any collision with the other GameItems
+	occured. If so, it returns pointer to that item, otherwise (if collision did not occured)
+	it returns nullptr.
 */
 GameItem * GameItem::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {

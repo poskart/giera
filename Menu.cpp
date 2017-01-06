@@ -1,5 +1,4 @@
 #include "Menu.h"
-#include <iostream>
 
 using namespace std;
 
@@ -21,16 +20,25 @@ Menu::Menu(Game & gra)
 
 Menu::~Menu() {}
 
+/*
+	Start menu for the new game. Initialize manu window, 
+	wait for key pressed and take appropriate action depending 
+	on the key pressed.
+*/
 bool Menu::start(void)
 {
 	int highlight = 1;
 	int choice = 0;
 	int c;
 
+	// Initialize ncurses data structures
 	initscr();
+	// Clear the window
 	clear();
+	// Do not show input characters
 	noecho();
-	cbreak();	/* Line buffering disabled. pass on everything */
+	// Line buffering disabled. pass on everything 
+	cbreak();
 	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
 	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
 
@@ -64,7 +72,7 @@ bool Menu::start(void)
 			break;
 		}
 		printMenu(menu_win, highlight);
-		if (choice != 0)	/* User did a choice come out of the infinite loop */
+		if (choice != 0)	/* User did a choice, so get out of the infinite loop */
 			break;
 	}
 	clrtoeol();
@@ -98,6 +106,9 @@ bool Menu::start(void)
 	return false;
 }
 
+/*
+	Print menu for the game with currently highlited choice.
+*/
 void Menu::printMenu(WINDOW *menu_win, int highlight)
 {
 	int x, y, i;
@@ -121,15 +132,23 @@ void Menu::printMenu(WINDOW *menu_win, int highlight)
 	wrefresh(menu_win);
 }
 
+/*
+	Print save menu with prompt for file name and return true if
+	file succesfully saved, false otherwise.
+*/
 bool Menu::printSaveMenu()
 {
 	char fileName[80];
 	WINDOW * saveWin = nullptr;
 
+	// Initialize ncurses data structures
 	initscr();
+	// Clear the window
 	clear();
+	// Do not show input characters
 	noecho();
-	cbreak();	/* Line buffering disabled. pass on everything */
+	// Line buffering disabled. pass on everything
+	cbreak();
 	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
 	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
 
@@ -137,6 +156,7 @@ bool Menu::printSaveMenu()
 	keypad(saveWin, TRUE);
 	refresh();
 
+	// Draw menu borders
 	box(saveWin, 0, 0);
 	wrefresh(saveWin);
 
@@ -153,7 +173,8 @@ bool Menu::printSaveMenu()
 	}
 	catch (std::ofstream::failure e) 
 	{
-		std::cerr << "Exception opening/reading/closing file in save attempt";
+		mvwprintw(saveWin, 3, 2, "%s", "Exception opening/reading/closing file in save attempt");
+		wrefresh(saveWin);
 		getch();
 		return false;
 	}
@@ -164,15 +185,23 @@ bool Menu::printSaveMenu()
 	return true;
 }
 
+/*
+	Print load menu with prompt for file name and return true if
+	file succesfully loaded, false otherwise.
+*/
 bool Menu::printLoadMenu()
 { 
 	char fileName[80];
 	WINDOW * saveWin = nullptr;
 
+	// Initialize ncurses data structures
 	initscr();
+	// Clear the window
 	clear();
+	// Do not show input characters
 	noecho();
-	cbreak();	/* Line buffering disabled. pass on everything */
+	// Line buffering disabled. pass on everything
+	cbreak();	
 	startx = (gameBoardSizeX + scoreDisplaySize - MENU_WIDTH) / 2;
 	starty = (gameBoardSizeY - MENU_HEIGHT) / 2;
 
@@ -180,6 +209,7 @@ bool Menu::printLoadMenu()
 	keypad(saveWin, TRUE);
 	refresh();
 
+	// Draw menu borders
 	box(saveWin, 0, 0);
 	wrefresh(saveWin);
 
@@ -196,7 +226,8 @@ bool Menu::printLoadMenu()
 	}
 	catch (std::ifstream::failure e)
 	{
-		std::cerr << "Exception opening/reading/closing file in load attempt";
+		mvwprintw(saveWin, 3, 2, "%s", "Exception opening/reading/closing file in load attempt");
+		wrefresh(saveWin);
 		getch();
 		return false;
 	}

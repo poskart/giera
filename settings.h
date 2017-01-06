@@ -40,6 +40,7 @@ typedef struct
 }position;
 
 position operator+(const position & pos1, const position & pos2);
+position operator-(const position & pos1, const position & pos2);
 bool operator==(const position & pos1, const position & pos2);
 
 typedef enum
@@ -57,7 +58,11 @@ enum gameObjectTypes
 	enemybullet,
 	stone,
 	simpleenemyship,
-	myship
+	myship,
+	guidedmissile,
+	triplemissile,
+	enemydestroyer,
+	enemyguidedmissile
 };
 
 #endif

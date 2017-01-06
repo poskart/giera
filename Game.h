@@ -33,6 +33,4 @@ private:
 	milliseconds timeCounter, beginTime;
 };
 
-streamsize getSizeFromEnumType(gameObjectTypes typeOfObj);
-
 #endif /* GAME_H_ */

@@ -28,6 +28,7 @@ public:
 	void setLife(int & percent);
 	int getLife(void);
 	bool isAlive(void);
+	bool loseHealth(const int & health);
 	int getFirepower(void);
 	position getPosition(void);
 	gameItemInfo getItemParameters(void);

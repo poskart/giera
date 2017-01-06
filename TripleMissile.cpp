@@ -4,6 +4,7 @@ char TripleMissile::mainCharacter = 'o';
 
 TripleMissile::TripleMissile()
 {
+	firepower = 100;
 	movementSpeed = 20;
 	horizontalSpeed = 0;
 	lastHorizontalUpdateTime = 0;
@@ -11,6 +12,7 @@ TripleMissile::TripleMissile()
 
 TripleMissile::TripleMissile(const int & xx, const int & yy)
 {
+	firepower = 100;
 	movementSpeed = 20;
 	horizontalSpeed = 0;
 	lastHorizontalUpdateTime = 0;
@@ -20,16 +22,26 @@ TripleMissile::TripleMissile(const int & xx, const int & yy)
 
 TripleMissile::~TripleMissile() {}
 
+/*
+	Method setHorizontalSpeed(double spd) sets new horizontal
+	speed value to spd.
+*/
 void TripleMissile::setHorizontalSpeed(double spd)
 {
 	horizontalSpeed = spd;
 }
 
+/*
+	Returns main character for this game item.
+*/
 char TripleMissile::getMainCharacter(void) const
 {
 	return mainCharacter;
 }
 
+/*
+	Method updatePosition(long int ms) updates position of TripleMissile.
+*/
 bool TripleMissile::updatePosition(long int ms)
 {
 	int horizontalMove = 0;
@@ -51,7 +63,7 @@ bool TripleMissile::updatePosition(long int ms)
 	if (ms - lastUpdateTime > gameSlowness / movementSpeed)
 	{
 		lastUpdateTime = ms;
-		if (!move(horizontalMove, speed*attackDir))
+		if (!move(0, speed*attackDir))
 			outOfTheBoard = true;
 	}
 	return !outOfTheBoard;

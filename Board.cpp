@@ -28,6 +28,12 @@ Board::Board(WINDOW * fromGame) : Board::Board()
 
 Board::~Board() {}
 
+/*
+	Method init(WINDOW * fromGame) initlializes all functionalities 
+	which are needed during board items processing. It sets current
+	window pointer, initializes random numbers, and initializes frame's
+	character arrays.
+*/
 void Board::init(WINDOW * fromGame)
 {
 	//initialize random numbers
@@ -44,6 +50,9 @@ void Board::init(WINDOW * fromGame)
 	GameItem::setCommonWindow(win);
 }
 
+/*
+	Method drawFrame() draws frame in current window
+*/
 void Board::drawFrame()
 {
 	mvwprintw(win, 0, 0, "\r%s\n", frameHorizontalLine);
@@ -58,6 +67,10 @@ void Board::drawFrame()
 	wrefresh(win);
 }
 
+/*
+	Method initializeItems(void) creates myShip and pushes
+	some enemy items to the board.
+*/
 void Board::initializeItems(void)
 {
 	myShip = new MyShip();
@@ -82,6 +95,10 @@ void Board::initializeItems(void)
 	randomEnemy(2.2);
 }
 
+/*
+	Method drawItems() draws all game items on the board
+	(in current window).
+*/
 void Board::drawItems()
 {
 	gameItemIterator i = boardItems.begin();
@@ -108,7 +125,7 @@ void Board::randomEnemy(double difficultyLevel)
 	//get random y form range 0 - difficultyLevel;
 	double y = ((rand() % 100) / 100.0) * difficultyLevel;
 	//get floor of min(x,y)
-	int enemyIndex = (int) min(x, y);	
+	int enemyIndex = (int)min(	(int)min(x, y), 2	);	
 
 	GameItem * nowy = nullptr;
 	switch (enemyIndex)
@@ -120,7 +137,7 @@ void Board::randomEnemy(double difficultyLevel)
 		nowy = new SimpleEnemyShip();
 		break;
 	case 2:
-		nowy = new SimpleEnemyShip();
+		nowy = new EnemyDestroyer();
 		break;
 	default:
 		break;
@@ -144,7 +161,11 @@ void Board::randomEnemy(double difficultyLevel)
 	}
 }
 
-void Board::showItems(void)
+/*
+	Method showStatistic(void) prints item's count on the board 
+	and game state variables.
+*/
+void Board::showStatistic(void)
 {
 	int SimpleEnemyShips = 0, stones = 0;
 	gameItemIterator it = boardItems.begin();
@@ -167,6 +188,12 @@ void Board::showItems(void)
 	getch();
 }
 
+/*
+	Method update(chrono::milliseconds & time) executes an 
+	appropriate action for each of game item depending on the
+	current time, inserts new enemy items and updates game
+	state variables.
+*/
 bool Board::update(chrono::milliseconds & time)
 {
 	bool ifEndOfTheGame = false;
@@ -190,10 +217,14 @@ bool Board::update(chrono::milliseconds & time)
 	return !ifEndOfTheGame;
 }
 
+/*
+	Method keyHandle(const int & key) perform an appropriate
+	action in response to given, pressed key.
+*/
 void Board::keyHandle(const int & key)
 {
 	int dS = 1;
-	int ctrl = 3*dS;
+	int ctrlPressedDistance = 3*dS;
 	switch (key)
 	{
 	case KEY_UP:
@@ -209,25 +240,26 @@ void Board::keyHandle(const int & key)
 		myShip->move(-dS, 0);
 		break;
 	case CTL_UP:
-		while (ctrl--)
-			if (myShip->move(0, -ctrl))
+		while (ctrlPressedDistance--)
+			if (myShip->move(0, -ctrlPressedDistance))
 				break;
 		break;
 	case CTL_DOWN:
-		while (ctrl--)
-			if (myShip->move(0, ctrl))
+		while (ctrlPressedDistance--)
+			if (myShip->move(0, ctrlPressedDistance))
 				break;
 		break;
 	case CTL_RIGHT:
-		while (ctrl--)
-			if (myShip->move(ctrl, 0))
+		while (ctrlPressedDistance--)
+			if (myShip->move(ctrlPressedDistance, 0))
 				break;
 		break;
 	case CTL_LEFT:
-		while (ctrl--)
-			if (myShip->move(-ctrl, 0))
+		while (ctrlPressedDistance--)
+			if (myShip->move(-ctrlPressedDistance, 0))
 				break;
 		break;
+	// Fire conventional missile
 	case ' ':
 	{
 		position pos = myShip->getPosition();
@@ -235,9 +267,9 @@ void Board::keyHandle(const int & key)
 		myShip->shoot(bul, &boardItems);
 		break;
 	}
+	// Fire guided missile if doesn't exist
 	case 'g':
 	{
-		// If guided missile does not exist
 		if (myShip->getGuidedMissilePtr() == nullptr)
 		{
 			position pos = myShip->getPosition();
@@ -247,6 +279,7 @@ void Board::keyHandle(const int & key)
 		}
 		break;
 	}
+	// Fire triple missile
 	case 't':
 	{
 		position pos = myShip->getPosition();
@@ -259,13 +292,15 @@ void Board::keyHandle(const int & key)
 		}
 		break;
 	}
-	case 'a':	// Move guided missile to the left (if exists)
+	// Move guided missile to the left (if exists)
+	case 'a':
 		if (myShip->getGuidedMissilePtr() != nullptr)
 		{
 			myShip->getGuidedMissilePtr()->move(-1, 0);
 		}
 		break;
-	case 'd':	// Move guided missile to the right (if exists)
+	// Move guided missile to the right (if exists)
+	case 'd':
 		if (myShip->getGuidedMissilePtr() != nullptr)
 		{
 			myShip->getGuidedMissilePtr()->move(1, 0);
@@ -286,7 +321,7 @@ void Board::keyHandle(const int & key)
 void Board::updateMovementsAndAttack(chrono::milliseconds & time)
 {	
 	// Update target for every enemy item (target = myShip)
-	EnemyItem::getTargetPosition(myShip);
+	EnemyItem::updateTargetPosition(myShip);
 	gameItemIterator i = boardItems.begin();
 	if (i == boardItems.end())
 		return;
@@ -366,6 +401,19 @@ bool Board::collisionDetect(void)
 					if (dynamic_cast<GuidedMissile *>(*i) != nullptr)
 					{
 						myShip->setGuidedMissilePtr(nullptr);
+					}
+					if (dynamic_cast<EnemyDestroyer *>(itemHitByI) != nullptr)
+					{
+						itemHitByI->loseHealth((*i)->getFirepower());
+						if (!itemHitByI->isAlive())
+						{
+							boardItems.remove(itemHitByI);
+							delete itemHitByI;
+						}
+						itemToDelete = *i;
+						i = boardItems.erase(i);
+						delete itemToDelete;
+						continue;
 					}
 				}
 				// if (EnemyBullet) hit MyBullet

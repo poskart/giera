@@ -14,7 +14,8 @@ class EnemyItem : virtual public GameItem
 public:
 	EnemyItem();
 	virtual ~EnemyItem();
-	static void getTargetPosition(GameItem * target);
+	static void updateTargetPosition(GameItem * target);
+	bool isTargetWithinRange(int xRangeArea);
 protected:
 	static direction attackDir;
 	static position targetPos;

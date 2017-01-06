@@ -20,8 +20,8 @@ Spaceship::~Spaceship()
 }
 
 /*
-	Method shoot() initializes position of new bullet and includes
-	this new item in GameItem main container.
+	Method shoot(T * nowy, gameItemContainer * boardItems) initializes 
+	position of new bullet and includes this new item in GameItem main container.
 */
 template<typename T>
 void Spaceship::shoot(T * nowy, gameItemContainer * boardItems)
@@ -38,6 +38,16 @@ void Spaceship::shoot(T * nowy, gameItemContainer * boardItems)
 }
 
 /*
+	Method shoot(T * nowy, gameItemContainer * boardItems, position pos) initializes
+	position of new bullet with pos value and includes this new item in GameItem main container.
+*/
+void Spaceship::shoot(EnemyItem * nowy, gameItemContainer * boardItems, position pos)
+{
+	nowy->setPosition(pos);
+	boardItems->push_back(nowy);
+}
+
+/*
 	Shoot with the default weapon
 */
 void Spaceship::shoot(gameItemContainer * boardItems)
@@ -45,6 +55,10 @@ void Spaceship::shoot(gameItemContainer * boardItems)
 	Spaceship::shoot(new Bullet(), boardItems );
 }
 
+/*
+	Method draw(ostream & where) draws graphical representation of the
+	item to the board.
+*/
 void Spaceship::draw(ostream & where) const
 {
 	GameItem::draw(where);

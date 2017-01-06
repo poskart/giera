@@ -18,9 +18,11 @@ int main()
 {
 	initscr();
 	noecho();
+	// Create game object
 	Game gra;
-	//_CrtSetBreakAlloc(195);
+	// Create menu
 	Menu menu(gra);
+	// Start menu
 	while(menu.start());
 
 	refresh();

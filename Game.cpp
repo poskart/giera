@@ -14,20 +14,21 @@ Game::Game()
 		);
 }
 
-Game::~Game()
-{
-	// TODO Auto-generated destructor stub
-}
+Game::~Game()	{}
 
+/*
+	Method playGame(bool newGame) initializes new game if newGame 
+	argument is true or provide an existing game otherwise. Method 
+	ends it's execution when game is finished or 'Esc' key was pressed.
+*/
 void Game::playGame(bool newGame)
 {
 	if(newGame)
 		initialize();
-	// do not block keyboard for gameWindow - 
-	// read each of characters separately
+	// Do not block keyboard for gameWindow - read each of characters separately
 	wtimeout(gameWindow, 0);
 
-	int c = 0;
+	int inputCharacter = 0;
 	fflush(stdin);
 	while (1)
 	{
@@ -36,16 +37,16 @@ void Game::playGame(bool newGame)
 			system_clock::now().time_since_epoch()
 			) - beginTime;
 		
-		// no delay mode enabled
+		// No delay mode enabled
 		nodelay(gameWindow, true);
 
 		// Wait for key pressed
-		c = wgetch(gameWindow);
+		inputCharacter = wgetch(gameWindow);
 		
-		// update ship behavior
-		plansza->keyHandle(c);
+		// Update ship behavior
+		plansza->keyHandle(inputCharacter);
 
-		// check if MyShip not destroyed
+		// Check if MyShip not destroyed
 		if (!(plansza->update(timeCounter)))
 			break;
 
@@ -55,9 +56,11 @@ void Game::playGame(bool newGame)
 		plansza->drawItems();
 		plansza->showInfo(timeCounter.count());
 
-		if (c == 's')
-			plansza->showItems();
-		if (c == 27)
+		// Show game statistics
+		if (inputCharacter == 's')
+			plansza->showStatistic();
+		// Escape
+		if (inputCharacter == 27)
 			break;
 
 		Sleep(20);
@@ -65,6 +68,17 @@ void Game::playGame(bool newGame)
 	getch();
 }
 
+/*
+	Method saveGame(const char * fileName) saves a game state into 
+	binary file fileName. saveGame() also covers error handling 
+	releted to file operations.
+
+	File structure (binary):
+		1_gameObjectType (enum), 1_gameItemInfo (struct), 2_gameObjectType (enum), 
+		2_gameItemInfo (struct), ..., ith_gameObjectType (enum), ith_gameItemInfo (struct), ...
+		myShip gameObjectType (enum), myShip gameItemInfo (struct)
+		score (int), difficultyLevel (double), insertNewEnemyMeanTime (int)
+*/
 void Game::saveGame(const char * fileName)
 {
 	ofstream fout;
@@ -73,6 +87,7 @@ void Game::saveGame(const char * fileName)
 		badbit - read/writing error on i/o operation
 	*/
 	fout.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+	// Try to open file fileName
 	try
 	{
 		fout.open(fileName, ios_base::out | ios_base::binary);
@@ -81,15 +96,22 @@ void Game::saveGame(const char * fileName)
 	{
 		throw e;
 	}
-	gameObjectTypes typeOfObject;
-
-	gameItemIterator tmpIter;
+	// If plansza not empty, save game state to the file
 	if (plansza != nullptr)
-	{
-		tmpIter = plansza->boardItems.begin();
+	{	
+		gameObjectTypes typeOfObject;
+		gameItemIterator tmpIter = plansza->boardItems.begin();
 		for (; tmpIter != plansza->boardItems.end(); tmpIter++)
 		{
-			if (dynamic_cast<MyBullet *>(*tmpIter) != nullptr)
+			if (dynamic_cast<GuidedMissile *>(*tmpIter) != nullptr)
+				typeOfObject = guidedmissile;
+			else if (dynamic_cast<TripleMissile *>(*tmpIter) != nullptr)
+				typeOfObject = triplemissile;
+			else if (dynamic_cast<EnemyDestroyer *>(*tmpIter) != nullptr)
+				typeOfObject = enemydestroyer;
+			else if (dynamic_cast<EnemyGuidedMissile *>(*tmpIter) != nullptr)
+				typeOfObject = enemyguidedmissile;
+			else if (dynamic_cast<MyBullet *>(*tmpIter) != nullptr)
 				typeOfObject = mybullet;
 			else if (dynamic_cast<EnemyBullet *>(*tmpIter) != nullptr)
 				typeOfObject = enemybullet;
@@ -124,14 +146,26 @@ void Game::saveGame(const char * fileName)
 	fout.close();
 }
 
+/*
+	Method loadGame(const char * fileName) loads a game state from
+	binary file fileName. loadGame() also covers error handling
+	releted to file operations.
+
+	File structure (binary):
+		1_gameObjectType (enum), 1_gameItemInfo (struct), 2_gameObjectType (enum),
+		2_gameItemInfo (struct), ..., ith_gameObjectType (enum), ith_gameItemInfo (struct), ...
+		myShip gameObjectType (enum), myShip gameItemInfo (struct)
+		score (int), difficultyLevel (double), insertNewEnemyMeanTime (int)
+*/
 void Game::loadGame(const char * fileName)
 {
 	ifstream fin;
 	/*
-	failbit - logical error on i/o operation
-	badbit - read/writing error on i/o operation
+		failbit - logical error on i/o operation
+		badbit - read/writing error on i/o operation
 	*/
 	fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	// Try to open file fileName
 	try
 	{
 		fin.open(fileName, ios_base::in | ios_base::binary);
@@ -140,24 +174,31 @@ void Game::loadGame(const char * fileName)
 	{
 		throw e;
 	}
-
-	if (plansza != nullptr)
-	{
-		deleteBoard();
-	}
+	// Delete board if yet initialized
+	deleteBoard();
+	// Initialize new, empty board
 	plansza = new Board();
 	plansza->init(gameWindow);
 
 	gameObjectTypes typeOfObject = stone;
 	GameItem * itemToInsert = nullptr;
+	// Check if file is not empty
 	if (!(fin.eof()))
 	{
+		// Continue reading until myShip item found
 		while (typeOfObject != myship && !(fin.eof()))
 		{
 			// Read type of the item
 			fin.read((char *)&typeOfObject, sizeof(typeOfObject));
-
-			if (typeOfObject == mybullet)
+			if (typeOfObject == guidedmissile)
+				itemToInsert = new GuidedMissile();
+			else if (typeOfObject == triplemissile)
+				itemToInsert = new TripleMissile();
+			else if (typeOfObject == enemydestroyer)
+				itemToInsert = new EnemyDestroyer();
+			else if (typeOfObject == enemyguidedmissile)
+				itemToInsert = new EnemyGuidedMissile();
+			else if (typeOfObject == mybullet)
 				itemToInsert = new MyBullet();
 			else if (typeOfObject == enemybullet)
 				itemToInsert = new EnemyBullet();
@@ -190,6 +231,9 @@ void Game::loadGame(const char * fileName)
 	fin.close();
 }
 
+/*
+	Delete board items and board object itself it board exists
+*/
 void Game::deleteBoard()
 {
 	if (plansza != nullptr)
@@ -199,20 +243,33 @@ void Game::deleteBoard()
 	}
 }
 
+/*
+	Method initialize() game to be ready to play. Creates new board object, 
+	initalizes game window, initialize board items (sample enemies etc.) and
+	drows board & items.
+*/
 void Game::initialize()
 {
-	plansza = new Board();//155, 
+	plansza = new Board();
 	plansza->init(gameWindow);
 	plansza->initializeItems();
 	plansza->drawFrame();
 	plansza->drawItems();
 }
 
+/*
+	Method isBoardInitialized(void) returns true when board
+	has been already initialized, false otherwise.
+*/
 bool Game::isBoardInitialized(void)
 {
 	return plansza != nullptr;
 }
 
+/*
+	Method updateGameTime(void) overwrites game begin time 
+	with the current time in miliseconds.
+*/
 void Game::updateGameTime(void)
 {
 	// Save begin time

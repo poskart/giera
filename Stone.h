@@ -35,8 +35,8 @@ private:
 
 	static char mainCharacter;
 	static int pointsForDestroy;
-	/**
-	 * array that describes size of the gameItem in each of direction
+	/*
+	 * Array that describes size of the gameItem in each of direction
 	 * form the middle of Item (forward, right, back, left)
 	 */
 	static position pointsOfBody[numberOfBodyPoints];

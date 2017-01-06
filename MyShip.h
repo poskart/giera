@@ -20,7 +20,6 @@ public:
 	MyShip(const int & xx, const int & yy);
 	virtual ~MyShip();
 
-	bool loseHealth(const int & health);
 	GuidedMissile * getGuidedMissilePtr(void);
 	void setGuidedMissilePtr(GuidedMissile *);
 	Spaceship * getInstance() { return this; };

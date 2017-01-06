@@ -19,6 +19,8 @@
 #include "EnemyBullet.h"
 #include "GuidedMissile.h"
 #include "TripleMissile.h"
+#include "EnemyDestroyer.h"
+#include "EnemyGuidedMissile.h"
 
 using namespace std;
 
@@ -33,7 +35,7 @@ public:
 	void drawFrame(void);
 	void drawItems(void);
 	void initializeItems(void);
-	void showItems(void);
+	void showStatistic(void);
 	bool collisionDetect(void);
 	void randomEnemy(double difficultyLevel);
 	bool update(chrono::milliseconds & time);

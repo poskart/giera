@@ -21,6 +21,7 @@ SimpleEnemyShip::SimpleEnemyShip(const int & xx, const int & yy)
 {
 	previousShootTime = 0;
 	betweenShotMeanTime = 1000;
+	maxShootingRange = 5;
 	movementSpeed = 2;
 	firepower = 50;
 	coordinates.x = xx;
@@ -28,57 +29,78 @@ SimpleEnemyShip::SimpleEnemyShip(const int & xx, const int & yy)
 	targetSelfLocatePositionY = rand() % maxYfrontLinePosition;
 }
 
-SimpleEnemyShip::~SimpleEnemyShip(){
-}
+SimpleEnemyShip::~SimpleEnemyShip()	{}
 
+/*
+	Return SimpleEnemyShip value if destroyed.
+*/
 int SimpleEnemyShip::getPointsForDestroy(void)
 {
 	return pointsForDestroy;
 }
 
+/*
+	Return points of array which tell where on the board item's body is now.
+*/
 position * SimpleEnemyShip::getPointsOfBody(void) const
 {
 	return pointsOfBody;
 }
+
+/*
+	Return points count which the graphical representation
+	of the item takes, minus 1 (without main position character).
+*/
 int SimpleEnemyShip::getNumberOfBodyPoints(void) const
 {
 	return numberOfBodyPoints;
 }
 
+/*
+	Returns main character for this game item.
+*/
 char SimpleEnemyShip::getMainCharacter(void) const
 {
 	return mainCharacter;
 }
 
+/*
+	Method updatePosition(long int ms) updates position of SimpleEnemyShip.
+*/
 bool SimpleEnemyShip::updatePosition(long int ms)
 {
 	if ((ms - lastUpdateTime) > (gameSlowness / movementSpeed))
 	{
 		int targetDx = 0, targetDy = 0;
-		double  kp = 4 / gameBoardSizeX;
+		double  kp = 100 / gameBoardSizeX;
 		int xPositionError = targetPos.x - this->coordinates.x;
 		if (xPositionError < 0)
 			targetDx = (int)(kp*xPositionError) - 1;
 		else if (xPositionError > 0)
 			targetDx = (int)(kp*xPositionError) + 1;
-		if ((targetSelfLocatePositionY - coordinates.y) != 0)
+		if ((targetSelfLocatePositionY - coordinates.y) > 0)
 			targetDy = 1;
 		move(targetDx, targetDy);
 		lastUpdateTime = ms;
 
-		if (xPositionError < 5 && xPositionError > -5 )
-		{
-			shootEnabled = true;
-		}
+		this->shootingEnableWhenEnemyInRange(xPositionError);
 	}
 	return true;
 }
 
+/*
+	Method updateColision(...) handles collision with the other game items
+*/
 GameItem * SimpleEnemyShip::updateColision(gameItemContainer * boardItems, GameItem * myShip)
 {
 	return nullptr;
 }
 
+/*
+	Method shootIfShould(...), if it's time to, adds new missile,
+	updates proviousShootTime attribute value and disables shooting
+	at the end.
+*/
 bool SimpleEnemyShip::shootIfShould(gameItemContainer * boardItems, long int ms)
 {
 	int shootTimePeriod = (rand() % (2 * betweenShotMeanTime) + 500);
@@ -89,6 +111,20 @@ bool SimpleEnemyShip::shootIfShould(gameItemContainer * boardItems, long int ms)
 		shoot(pocisk, boardItems);
 		previousShootTime = ms;
 		shootEnabled = false;
+		return true;
+	}
+	return false;
+}
+
+/*
+	Method shootingEnableWhenEnemyInRange(int xPositionError) sets 
+	shootEnabled attribute to true when enemy is within range.
+*/
+bool SimpleEnemyShip::shootingEnableWhenEnemyInRange(int xPositionError)
+{
+	if (xPositionError < maxShootingRange && xPositionError > -maxShootingRange)
+	{
+		shootEnabled = true;
 		return true;
 	}
 	return false;

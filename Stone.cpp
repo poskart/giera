@@ -26,11 +26,17 @@ Stone::Stone(const int & xx, const int & yy)
 
 Stone::~Stone(){}
 
+/*
+	Return Stone value if destroyed.
+*/
 int Stone::getPointsForDestroy(void)
 {
 	return pointsForDestroy;
 }
 
+/*
+	Return points of array which tell where on the board item's body is now.
+*/
 position * Stone::getPointsOfBody(void) const
 {
 	if (!isStoneAtTheEndOfTheBoard())
@@ -39,6 +45,11 @@ position * Stone::getPointsOfBody(void) const
 		return pointsWhenDisappears;
 	return pointsOfBody;
 }
+
+/*
+	Return points count which the graphical representation
+	of the item takes, minus 1 (without main position character).
+*/
 int Stone::getNumberOfBodyPoints(void) const
 {
 	if (!isStoneAtTheEndOfTheBoard())
@@ -48,11 +59,17 @@ int Stone::getNumberOfBodyPoints(void) const
 	return numberOfBodyPoints;
 }
 
+/*
+	Returns main character for this game item.
+*/
 char Stone::getMainCharacter(void) const 
 {
 	return mainCharacter;
 }
 
+/*
+	Method updatePosition(long int ms) updates position of Stone.
+*/
 bool Stone::updatePosition(long int ms)
 {
 	if (ms - lastUpdateTime > (gameSlowness / movementSpeed))
