@@ -3,7 +3,7 @@
 using namespace std;
 
 char *choices[] = {
-	"Play the game",
+	"Play Shooter",
 	"Save game",
 	"Load game",
 	"Return to game",
