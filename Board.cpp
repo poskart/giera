@@ -64,7 +64,6 @@ void Board::drawFrame()
 		mvwprintw(win, i, gameBoardSizeX - 1, "%c", frameCharacter);
 	}
 	mvwprintw(win, i, 0, "\r%s\n", frameHorizontalLine);
-	wrefresh(win);
 }
 
 /*
@@ -110,7 +109,6 @@ void Board::drawItems()
 		}
 	}
 	cout<<*myShip;
-	wrefresh(win);
 }
 
 /*
@@ -487,7 +485,6 @@ void Board::showInfo(int gameTimeMs)
 	mvwprintw(win, 2, boardSizeX + 5, "Czas gry: %d", gameTimeMs/1000);
 	mvwprintw(win, 5, boardSizeX + 5, "Pozostalo zycia: %d%%", myShip->getLife());
 	mvwprintw(win, 7, boardSizeX + 5, "Punkty: %d", myShip->getScore());
-	wrefresh(win);
 }
 
 //double & Board::probabilityDistributeFunction(double & x, double & difficulty)

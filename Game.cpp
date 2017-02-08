@@ -30,15 +30,15 @@ void Game::playGame(bool newGame)
 
 	int inputCharacter = 0;
 	fflush(stdin);
+
+	// No delay mode enabled
+	nodelay(gameWindow, true);
 	while (1)
 	{
 		// Update time counter
 		timeCounter = duration_cast< milliseconds >(
 			system_clock::now().time_since_epoch()
 			) - beginTime;
-		
-		// No delay mode enabled
-		nodelay(gameWindow, true);
 
 		// Wait for key pressed
 		inputCharacter = wgetch(gameWindow);
@@ -55,6 +55,7 @@ void Game::playGame(bool newGame)
 		plansza->drawFrame();
 		plansza->drawItems();
 		plansza->showInfo(timeCounter.count());
+		wrefresh(gameWindow);
 
 		// Show game statistics
 		if (inputCharacter == 's')
